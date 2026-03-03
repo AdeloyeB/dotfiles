@@ -33,7 +33,7 @@ eval $(/opt/homebrew/bin/brew shellenv)
 ### 1.2 Homebrew Packages
 
 ```bash
-brew install neovim tmux fzf ripgrep fd lazygit node python pngpaste zoxide eza imagemagick
+brew install neovim tmux fzf ripgrep fd lazygit node python pngpaste zoxide eza imagemagick entr
 ```
 
 ### 1.3 Rust Toolchain
@@ -290,6 +290,7 @@ set -g @plugin 'tmux-plugins/tmux-open'
 set -g @plugin 'Morantron/tmux-fingers'
 set -g @plugin 'omerxx/tmux-floax'
 set -g @plugin 'alexwforsythe/tmux-which-key'
+set -g @plugin 'b0o/tmux-autoreload'
 
 # --- Plugin settings ---
 set -g @yank_selection_mouse 'clipboard'
@@ -575,6 +576,8 @@ return {
   { import = "lazyvim.plugins.extras.lang.rust" },
   { import = "lazyvim.plugins.extras.lang.python" },
   { import = "lazyvim.plugins.extras.lang.tailwind" },
+  { import = "lazyvim.plugins.extras.lang.java" },
+  { import = "lazyvim.plugins.extras.lang.dotnet" },
 
   {
     "nvim-treesitter/nvim-treesitter",
@@ -595,6 +598,10 @@ return {
         "tsx",
         "typescript",
         "yaml",
+        "c_sharp",
+        "java",
+        "kotlin",
+        "xml",
       },
     },
   },

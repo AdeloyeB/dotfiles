@@ -248,6 +248,7 @@ These escape sequences are captured in `tmux.conf` and mapped to the correspondi
 | `tmux-fingers` | Quick text selection and copy (like vimium hints) | -- |
 | `tmux-floax` | Floating pane support | Size: 80% x 80%; border color: `#a5d5fe`; text color: `#e4e4e4`; bind: `Ctrl+F` |
 | `tmux-which-key` | Keybinding help overlay | -- |
+| `tmux-autoreload` | Automatically reloads tmux config on file change | Requires `entr` (`brew install entr`) |
 
 ### Keybindings
 
@@ -458,6 +459,8 @@ LazyVim defaults.
 | `lazyvim.plugins.extras.lang.rust` | Rust |
 | `lazyvim.plugins.extras.lang.python` | Python |
 | `lazyvim.plugins.extras.lang.tailwind` | Tailwind CSS |
+| `lazyvim.plugins.extras.lang.java` | Java (via nvim-jdtls) |
+| `lazyvim.plugins.extras.lang.dotnet` | C# / F# (via omnisharp) |
 
 #### Treesitter Parsers
 
@@ -465,7 +468,7 @@ All of the following parsers are set to auto-install:
 
 ```
 bash, css, html, javascript, json, lua, markdown, markdown_inline,
-python, rust, svelte, toml, tsx, typescript, yaml
+python, rust, svelte, toml, tsx, typescript, yaml, c_sharp, java, kotlin, xml
 ```
 
 #### Mason Tools (Auto-Installed)
