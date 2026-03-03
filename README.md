@@ -36,6 +36,7 @@ terminal-config/
 │   ├── tmux-session-list
 │   ├── tmux-sessionizer
 │   ├── tmux-switch-session
+│   ├── tmux-learning-cloud
 │   └── lgt
 ├── nvim/                        # Full LazyVim configuration
 │   ├── init.lua
@@ -375,6 +376,17 @@ Switches to a tmux session by its 1-based index number.
 ```bash
 tmux-switch-session 3   # switches to the 3rd session
 ```
+
+### tmux-learning-cloud
+
+Creates a "Learning Cloud" tmux window with a 50/50 horizontal split:
+
+| Pane | Content | Directory |
+|------|---------|-----------|
+| Left | Claude Code (`--dangerously-skip-permissions`) | `~/dev-mode/learning-cloud` |
+| Right | LazyVim (`nvim`) | `~/dev-mode/learning-cloud` |
+
+If a "Learning Cloud" window already exists in the current session, it switches to it instead of creating a duplicate.
 
 ### lgt
 

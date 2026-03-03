@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Creates a "Learning Cloud" tmux window with Claude Code (left) and LazyVim (right)
+
+DIR="$HOME/dev-mode/learning-cloud"
+WIN_NAME="Learning Cloud"
+SESSION=$(tmux display-message -p '#S')
+
+# Check if window already exists
+if tmux list-windows -t "$SESSION" -F '#W' | grep -qx "$WIN_NAME"; then
+  # Switch to it instead of creating a duplicate
+  tmux select-window -t "$SESSION:$WIN_NAME"
+  exit 0
+fi
+
+# Create window with Claude Code in the left pane
+tmux new-window -n "$WIN_NAME" -c "$DIR" "claude --dangerously-skip-permissions"
+
+# Split right pane for LazyVim
+tmux split-window -h -t "$SESSION:$WIN_NAME" -c "$DIR" "nvim"
+
+# Balance panes 50/50
+tmux select-layout -t "$SESSION:$WIN_NAME" even-horizontal
+
+# Focus left pane (Claude Code)
+tmux select-pane -t "$SESSION:$WIN_NAME.0"

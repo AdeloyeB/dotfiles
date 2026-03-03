@@ -426,6 +426,25 @@ A ThePrimeagen-style sessionizer script. It searches directories under `~/dev-mo
 
 Switches to a tmux session by 1-based index number. Takes a single numeric argument and switches to the session at that position in the list.
 
+#### `~/.local/bin/tmux-learning-cloud`
+
+Creates a "Learning Cloud" tmux window in the current session with a 50/50 horizontal split. Left pane runs `claude --dangerously-skip-permissions`, right pane runs `nvim`, both in `~/dev-mode/learning-cloud`. If the window already exists, switches to it instead of creating a duplicate.
+
+```bash
+#!/usr/bin/env bash
+DIR="$HOME/dev-mode/learning-cloud"
+WIN_NAME="Learning Cloud"
+SESSION=$(tmux display-message -p '#S')
+if tmux list-windows -t "$SESSION" -F '#W' | grep -qx "$WIN_NAME"; then
+  tmux select-window -t "$SESSION:$WIN_NAME"
+  exit 0
+fi
+tmux new-window -n "$WIN_NAME" -c "$DIR" "claude --dangerously-skip-permissions"
+tmux split-window -h -t "$SESSION:$WIN_NAME" -c "$DIR" "nvim"
+tmux select-layout -t "$SESSION:$WIN_NAME" even-horizontal
+tmux select-pane -t "$SESSION:$WIN_NAME.0"
+```
+
 #### `~/.local/bin/lgt`
 
 Opens lazygit in a tmux window named `"<current-directory-name> Git"`. The window auto-closes when lazygit exits.
@@ -444,6 +463,7 @@ chmod +x ~/.local/bin/tmux-command-palette
 chmod +x ~/.local/bin/tmux-session-list
 chmod +x ~/.local/bin/tmux-sessionizer
 chmod +x ~/.local/bin/tmux-switch-session
+chmod +x ~/.local/bin/tmux-learning-cloud
 chmod +x ~/.local/bin/lgt
 ```
 
