@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# tmux command palette — fuzzy search commands, keybindings, and actions
+
+# Build the palette entries
+{
+  # Common actions
+  echo "action | Reload config                    | source-file ~/.tmux.conf; display 'Reloaded'"
+  echo "action | New session                      | command-prompt -p 'Session name:' 'new-session -s %%'"
+  echo "action | Kill current session             | confirm-before kill-session"
+  echo "action | New window                       | new-window"
+  echo "action | Split horizontal                 | split-window -h"
+  echo "action | Split vertical                   | split-window -v"
+  echo "action | Close pane                       | confirm-before kill-pane"
+  echo "action | Close window                     | confirm-before kill-window"
+  echo "action | Rename window                    | command-prompt -p 'Window name:' 'rename-window %%'"
+  echo "action | Rename session                   | command-prompt -p 'Session name:' 'rename-session %%'"
+  echo "action | Toggle zoom (fullscreen pane)    | resize-pane -Z"
+  echo "action | Swap pane up                     | swap-pane -U"
+  echo "action | Swap pane down                   | swap-pane -D"
+  echo "action | Rotate panes                     | rotate-window"
+  echo "action | Even horizontal layout           | select-layout even-horizontal"
+  echo "action | Even vertical layout             | select-layout even-vertical"
+  echo "action | Tiled layout                     | select-layout tiled"
+  echo "action | Detach                           | detach-client"
+  echo "action | Show clock                       | clock-mode"
+  echo "action | List keybindings                 | list-keys"
+  echo "action | Enter copy mode                  | copy-mode"
+  echo "action | Clear history                    | clear-history"
+  echo "action | Synchronize panes (toggle)       | setw synchronize-panes"
+  echo "action | Install plugins (tpm)            | run-shell '~/.tmux/plugins/tpm/bin/install_plugins'"
+  echo "action | Update plugins (tpm)             | run-shell '~/.tmux/plugins/tpm/bin/update_plugins all'"
+
+  # Current keybindings
+  tmux list-keys 2>/dev/null | while IFS= read -r line; do
+    echo "key    | $line"
+  done
+} | fzf \
+    --prompt="  tmux> " \
+    --header="Actions & Keybindings" \
+    --layout=reverse \
+    --border=rounded \
+    --height=80% \
+    --color="bg+:#1a3a4a,fg+:#ffffff,hl:#00c2ff,hl+:#00c2ff,border:#616161,header:#616161,prompt:#ffffff,pointer:#00c2ff" \
+    --bind="enter:accept" \
+  | {
+    IFS='|' read -r type label cmd
+    type=$(echo "$type" | xargs)
+    cmd=$(echo "$cmd" | xargs)
+    if [ "$type" = "action" ] && [ -n "$cmd" ]; then
+      tmux $cmd
+    fi
+  }

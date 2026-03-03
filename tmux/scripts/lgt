@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# lgt: Open lazygit in a temporary tmux window named "<dirname> Git"
+# The window auto-closes when lazygit exits.
+
+TMUX_BIN="/opt/homebrew/bin/tmux"
+DIR_NAME="$(basename "$PWD")"
+WINDOW_NAME="${DIR_NAME} Git"
+
+$TMUX_BIN new-window -n "$WINDOW_NAME" "lazygit"

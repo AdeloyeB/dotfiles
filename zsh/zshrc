@@ -1,0 +1,196 @@
+# If you come from bash you might have to change your $PATH.
+# export PATH=$HOME/bin:/usr/local/bin:$PATH
+
+# Path to your oh-my-zsh installation.
+export ZSH="/Users/bode/.oh-my-zsh"
+
+# Set name of the theme to load --- if set to "random", it will
+# load a random theme each time oh-my-zsh is loaded, in which case,
+# to know which specific one was loaded, run: echo $RANDOM_THEME
+# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+ZSH_THEME="robbyrussell"
+
+# Set list of themes to pick from when loading at random
+# Setting this variable when ZSH_THEME=random will cause zsh to load
+# a theme from this variable instead of looking in $ZSH/themes/
+# If set to an empty array, this variable will have no effect.
+# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
+
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
+
+# Uncomment the following line to use hyphen-insensitive completion.
+# Case-sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
+
+# Uncomment the following line to disable bi-weekly auto-update checks.
+# DISABLE_AUTO_UPDATE="true"
+
+# Uncomment the following line to automatically update without prompting.
+# DISABLE_UPDATE_PROMPT="true"
+
+# Uncomment the following line to change how often to auto-update (in days).
+# export UPDATE_ZSH_DAYS=13
+
+# Uncomment the following line if pasting URLs and other text is messed up.
+# DISABLE_MAGIC_FUNCTIONS="true"
+
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
+
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
+
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+# Caution: this setting can cause issues with multiline prompts (zsh 5.7.1 and newer seem to work)
+# See https://github.com/ohmyzsh/ohmyzsh/issues/5765
+# COMPLETION_WAITING_DOTS="true"
+
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# You can set one of the optional three formats:
+# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# or set a custom format using the strftime function format specifications,
+# see 'man strftime' for details.
+# HIST_STAMPS="mm/dd/yyyy"
+
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
+
+# Which plugins would you like to load?
+# Standard plugins can be found in $ZSH/plugins/
+# Custom plugins may be added to $ZSH_CUSTOM/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(
+  git
+  docker
+  fzf
+  command-not-found
+  colored-man-pages
+  z
+  copypath
+  aliases
+  web-search
+  npm
+  bun
+  tmux
+  ssh-agent
+  sudo
+  zsh-syntax-highlighting
+  zsh-autosuggestions
+  zsh-completions
+  zsh-history-substring-search
+)
+
+source $ZSH/oh-my-zsh.sh
+
+# User configuration
+
+# export MANPATH="/usr/local/man:$MANPATH"
+
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8
+
+# Preferred editor for local and remote sessions
+# if [[ -n $SSH_CONNECTION ]]; then
+#   export EDITOR='vim'
+# else
+#   export EDITOR='mvim'
+# fi
+
+# Compilation flags
+# export ARCHFLAGS="-arch x86_64"
+
+# Set personal aliases, overriding those provided by oh-my-zsh libs,
+# plugins, and themes. Aliases can be placed here, though oh-my-zsh
+# users are encouraged to define aliases within the ZSH_CUSTOM folder.
+# For a full list of active aliases, run `alias`.
+#
+# Example aliases
+# alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
+
+# bun completions
+[ -s "/Users/bode/.bun/_bun" ] && source "/Users/bode/.bun/_bun"
+
+# Environment
+export BUN_INSTALL="$HOME/.bun"
+export JAVA_HOME="/opt/homebrew/opt/openjdk@21"
+
+# PATH (single export, no duplicates)
+export PATH="$HOME/.codeium/windsurf/bin:$BUN_INSTALL/bin:$HOME/.local/bin:$JAVA_HOME/bin:$PATH"
+
+# Ghost autocomplete (Warp-style) — plugin loaded via oh-my-zsh
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#666666"   # gray ghost text
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)   # history-first, fallback to tab-completion
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20              # skip suggestion on very long commands
+bindkey '→' autosuggest-accept                  # → to accept full suggestion
+bindkey '^]' autosuggest-accept-word            # ctrl+] to accept one word at a time
+
+# fzf — fuzzy history (ctrl+r) and file picker (ctrl+t)
+source <(fzf --zsh)
+
+# Fix Enter key in tmux+Ghostty (kitty protocol sends extended sequence)
+bindkey '^M' accept-line
+
+# dev-mode: tmux development layout
+# Usage:
+#   dev-mode          → attach to existing session, or create new one
+#   dev-mode reload   → reload ~/.tmux.conf without killing session state
+dev-mode() {
+  local session="dev"
+
+  if [[ "$1" == "reload" ]]; then
+    command tmux source-file ~/.tmux.conf 2>/dev/null
+    echo "tmux config reloaded (session state preserved)"
+    return
+  elif command tmux has-session -t "$session" 2>/dev/null; then
+    command tmux attach-session -t "$session"
+  else
+    _dev_mode_create "$session"
+  fi
+}
+
+_dev_mode_create() {
+  local session="$1"
+  # Window 1: AI Orchestrator (3-pane layout)
+  command tmux new-session -d -s "$session" -n "AI Orchestrator" -x "$(tput cols)" -y "$(tput lines)"
+  command tmux split-window -h -t "$session" -p 40
+  command tmux split-window -v -t "$session"
+  command tmux select-pane -t "$session:.0"
+
+  # Window 2: Deep Code
+  command tmux new-window -t "$session" -n "Deep Code"
+
+  # Focus first window and attach
+  command tmux select-window -t "$session":0
+  command tmux attach-session -t "$session"
+}
+
+# Paste clipboard image to file and print path
+clip() {
+  local f="/tmp/clip-$(date +%s).png"
+  pngpaste "$f" 2>/dev/null && echo "$f" || echo "No image in clipboard"
+}
+
+# Ctrl+V pastes clipboard image path inline
+_clip_inline() {
+  local f="/tmp/clip-$(date +%s).png"
+  if pngpaste "$f" 2>/dev/null; then
+    LBUFFER+="$f"
+  fi
+}
+zle -N _clip_inline
+bindkey '^X^V' _clip_inline
+
+# lg — open lazygit in a tmux window (or inline if not in tmux)
+alias lg='if [ -n "$TMUX" ]; then tmux new-window -n "lazygit" "lazygit"; else lazygit; fi'

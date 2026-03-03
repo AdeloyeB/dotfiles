@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Switch to session by index (1-based)
+index=$1
+
+# Get sorted session list and pick the nth one
+session=$(tmux list-sessions -F '#S' | sort | sed -n "${index}p")
+
+if [[ -n "$session" ]]; then
+    tmux switch-client -t "$session"
+fi

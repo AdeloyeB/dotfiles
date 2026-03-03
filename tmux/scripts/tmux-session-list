@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# Get current session
+current=$(tmux display-message -p '#S')
+
+# Get all sessions and format with numbers
+output=""
+index=1
+
+for session in $(tmux list-sessions -F '#S' | sort); do
+    if [[ "$session" == "$current" ]]; then
+        # Active session: white bg, black text
+        output+="#[bg=#ffffff,fg=#000000,bold] $index:$session #[bg=#000000]"
+    else
+        # Inactive session: dimmed
+        output+="#[bg=#000000,fg=#616161] $index:$session "
+    fi
+    ((index++))
+done
+
+echo "$output"

@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# dev-mode: Create a tmux "dev" session with the standard layout
+#
+# Usage:
+#   dev-mode          → attach to existing session, or create new one
+#   dev-mode reload   → reload ~/.tmux.conf without killing session state
+#
+#   Window 1: AI Orchestrator
+#   ┌────────────────────┬────────────┐
+#   │                    │   shell     │
+#   │   claude code      ├────────────┤
+#   │   (~60% width)     │   shell     │
+#   └────────────────────┴────────────┘
+#
+#   Window 2: Deep Code
+
+SESSION="dev"
+TMUX_BIN="/opt/homebrew/bin/tmux"
+
+# Reload config without killing session
+if [[ "$1" == "reload" ]]; then
+  $TMUX_BIN source-file ~/.tmux.conf 2>/dev/null
+  echo "tmux config reloaded (session state preserved)"
+  exit 0
+fi
+
+# Attach if session already exists
+if $TMUX_BIN has-session -t "$SESSION" 2>/dev/null; then
+  exec $TMUX_BIN attach-session -t "$SESSION"
+fi
+
+# Window 1: AI Orchestrator (3-pane layout)
+$TMUX_BIN new-session -d -s "$SESSION" -n "AI Orchestrator" -x 199 -y 56
+$TMUX_BIN split-window -t "$SESSION" -h -l 68
+$TMUX_BIN split-window -t "$SESSION:0.1" -v -l 26
+$TMUX_BIN send-keys -t "$SESSION:0.0" 'claude' Enter
+$TMUX_BIN select-pane -t "$SESSION:0.0"
+
+# Window 2: Deep Code
+$TMUX_BIN new-window -t "$SESSION" -n "Deep Code"
+
+# Focus first window and attach
+$TMUX_BIN select-window -t "$SESSION":0
+exec $TMUX_BIN attach-session -t "$SESSION"
