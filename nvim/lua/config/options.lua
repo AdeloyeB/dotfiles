@@ -4,3 +4,7 @@
 vim.opt.relativenumber = true
 vim.opt.scrolloff = 8
 vim.opt.termguicolors = true
+
+-- Faster file-change detection for AI tool edits
+vim.opt.updatetime = 1000 -- CursorHold triggers after 1s (default 4s)
+vim.opt.autoread = true -- Auto-read files changed outside Neovim

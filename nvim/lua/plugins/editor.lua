@@ -50,6 +50,9 @@ return {
     },
   },
 
+  -- vim-obsession: auto-maintains Session.vim for tmux-resurrect
+  { "tpope/vim-obsession" },
+
   -- svelte LSP (for Tauri + SvelteKit)
   {
     "neovim/nvim-lspconfig",

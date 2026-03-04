@@ -291,6 +291,7 @@ set -g @plugin 'Morantron/tmux-fingers'
 set -g @plugin 'omerxx/tmux-floax'
 set -g @plugin 'alexwforsythe/tmux-which-key'
 set -g @plugin 'b0o/tmux-autoreload'
+set -g @plugin 'thepante/tmux-git-autofetch'
 
 # --- Plugin settings ---
 set -g @yank_selection_mouse 'clipboard'
@@ -301,6 +302,11 @@ set -g @floax-border-color '#a5d5fe'
 set -g @floax-text-color '#e4e4e4'
 set -g @continuum-restore 'on'
 set -g @continuum-save-interval '10'
+set -g @resurrect-strategy-nvim 'session'
+
+# --- Popup style (subtle dark background for floating panes) ---
+set -g popup-style 'bg=#0a0a0a'
+set -g popup-border-style 'fg=#a5d5fe'
 
 # --- Window keybindings ---
 bind c new-window
@@ -492,6 +498,7 @@ All Neovim config files live under `~/.config/nvim/`.
     plugins/
       editor.lua
       colorscheme.lua
+      git.lua
       ui.lua
       image.lua
 ```
@@ -553,6 +560,10 @@ require("lazy").setup({
 vim.opt.relativenumber = true
 vim.opt.scrolloff = 8
 vim.opt.termguicolors = true
+
+-- Faster file-change detection for AI tool edits
+vim.opt.updatetime = 1000 -- CursorHold triggers after 1s (default 4s)
+vim.opt.autoread = true -- Auto-read files changed outside Neovim
 ```
 
 ### 5.5 `~/.config/nvim/lua/config/keymaps.lua`
@@ -564,7 +575,28 @@ vim.opt.termguicolors = true
 ### 5.6 `~/.config/nvim/lua/config/autocmds.lua`
 
 ```lua
--- LazyVim defaults are used.
+-- Aggressive file-change detection for AI tool edits (Claude Code, Cursor, Copilot)
+-- LazyVim checks on FocusGained; this adds a timer-based check for background changes
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
+  group = vim.api.nvim_create_augroup("auto_checktime", { clear = true }),
+  callback = function()
+    if vim.fn.getcmdwintype() == "" then
+      vim.cmd("checktime")
+    end
+  end,
+})
+
+-- Auto-start vim-obsession if no session is already being tracked
+vim.api.nvim_create_autocmd("VimEnter", {
+  group = vim.api.nvim_create_augroup("auto_obsession", { clear = true }),
+  callback = function()
+    -- Only auto-track if: not already in a session, not opened with specific files,
+    -- and obsession plugin is loaded
+    if vim.fn.argc() == 0 and vim.fn.exists(":Obsess") == 2 and vim.v.this_session == "" then
+      vim.cmd("Obsess")
+    end
+  end,
+})
 ```
 
 ### 5.7 `~/.config/nvim/lua/plugins/editor.lua`
@@ -619,11 +651,62 @@ return {
     },
   },
 
+  -- vim-obsession: auto-maintains Session.vim for tmux-resurrect
+  { "tpope/vim-obsession" },
+
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
         svelte = {},
+      },
+    },
+  },
+}
+```
+
+### 5.7b `~/.config/nvim/lua/plugins/git.lua`
+
+```lua
+return {
+  -- diffview.nvim: side-by-side diff viewer for reviewing AI-generated changes
+  {
+    "sindrets/diffview.nvim",
+    cmd = { "DiffviewOpen", "DiffviewFileHistory" },
+    keys = {
+      { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Diff View (working changes)" },
+      { "<leader>gD", "<cmd>DiffviewClose<cr>", desc = "Diff View Close" },
+      { "<leader>gh", "<cmd>DiffviewFileHistory %<cr>", desc = "File History (current)" },
+      { "<leader>gH", "<cmd>DiffviewFileHistory<cr>", desc = "File History (all)" },
+    },
+    opts = {
+      enhanced_diff_hl = true,
+      view = {
+        default = { layout = "diff2_vertical" },
+        merge_tool = { layout = "diff3_mixed" },
+      },
+      file_panel = {
+        listing_style = "tree",
+        win_config = { position = "left", width = 35 },
+      },
+      hooks = {
+        -- Auto-refresh when files change on disk (for AI tool edits)
+        view_opened = function()
+          local timer = vim.uv.new_timer()
+          timer:start(
+            2000,
+            3000,
+            vim.schedule_wrap(function()
+              local ok, lib = pcall(require, "diffview.lib")
+              if ok and lib.get_current_view() then
+                vim.cmd("checktime")
+              else
+                timer:stop()
+                timer:close()
+              end
+            end)
+          )
+        end,
       },
     },
   },

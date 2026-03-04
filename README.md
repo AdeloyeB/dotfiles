@@ -53,6 +53,7 @@ terminal-config/
 │       └── plugins/
 │           ├── colorscheme.lua
 │           ├── editor.lua
+│           ├── git.lua
 │           ├── image.lua
 │           └── ui.lua
 ├── zsh/
@@ -242,13 +243,14 @@ These escape sequences are captured in `tmux.conf` and mapped to the correspondi
 |---|---|---|
 | `tmux-sensible` | Sensible default settings | -- |
 | `tmux-yank` | Clipboard copy integration | `@yank_selection_mouse = clipboard` |
-| `tmux-resurrect` | Persist sessions across tmux server restarts | -- |
 | `tmux-continuum` | Automatic session save and restore | Save interval: 10 minutes; auto-restore on start |
+| `tmux-resurrect` | Persist sessions across tmux server restarts | `@resurrect-strategy-nvim 'session'` (restores vim-obsession sessions) |
 | `tmux-open` | Open files and URLs from tmux copy mode | -- |
 | `tmux-fingers` | Quick text selection and copy (like vimium hints) | -- |
-| `tmux-floax` | Floating pane support | Size: 80% x 80%; border color: `#a5d5fe`; text color: `#e4e4e4`; bind: `Ctrl+F` |
+| `tmux-floax` | Floating pane support | Size: 80% x 80%; border color: `#a5d5fe`; text color: `#e4e4e4`; bind: `Ctrl+F`; popup bg: `#0a0a0a` |
 | `tmux-which-key` | Keybinding help overlay | -- |
 | `tmux-autoreload` | Automatically reloads tmux config on file change | Requires `entr` (`brew install entr`) |
+| `tmux-git-autofetch` | Automatically fetches git changes in background | -- |
 
 ### Keybindings
 
@@ -414,6 +416,8 @@ Opens `lazygit` inside a tmux window named `<dirname> Git`. The window auto-clos
 | `relativenumber` | `true` |
 | `scrolloff` | `8` |
 | `termguicolors` | `true` |
+| `updatetime` | `1000` (faster CursorHold for AI tool edit detection) |
+| `autoread` | `true` (auto-reload files changed externally) |
 
 ### Keymaps
 
@@ -425,7 +429,10 @@ LazyVim defaults. `Space` is the leader key.
 
 **File:** `lua/config/autocmds.lua`
 
-LazyVim defaults.
+| Autocmd | Event | Purpose |
+|---|---|---|
+| `auto_checktime` | `FocusGained`, `BufEnter`, `CursorHold` | Runs `checktime` to detect files changed by AI tools (Claude Code, Cursor, Copilot) |
+| `auto_obsession` | `VimEnter` | Auto-starts vim-obsession session tracking for tmux-resurrect integration |
 
 ### Plugin Manager Configuration
 
@@ -582,6 +589,34 @@ Custom **lualine.nvim** theme, styled to match the tmux status bar.
 
 **Extensions:** neo-tree, lazy, fzf
 
+### Git Plugins
+
+**File:** `lua/plugins/git.lua`
+
+#### diffview.nvim
+
+Side-by-side diff viewer for reviewing AI-generated changes. Auto-refreshes every 3 seconds when the diff view is open, detecting files modified by Claude Code, Cursor, or Copilot.
+
+| Keybinding | Action |
+|---|---|
+| `<leader>gd` | Open diff view (all working changes) |
+| `<leader>gD` | Close diff view |
+| `<leader>gh` | File history (current file) |
+| `<leader>gH` | File history (all files) |
+
+| Setting | Value |
+|---|---|
+| Layout | `diff2_vertical` (side-by-side) |
+| File panel | Tree style, left side, 35 cols wide |
+| Auto-refresh | Timer polls every 3s while view is open |
+| Enhanced diff HL | Enabled |
+
+#### vim-obsession
+
+**Configured in:** `lua/plugins/editor.lua`
+
+Auto-maintains `Session.vim` for tmux-resurrect. The `auto_obsession` autocmd starts tracking automatically on `VimEnter`.
+
 ### Image Support
 
 **File:** `lua/plugins/image.lua`
@@ -599,7 +634,7 @@ Custom **lualine.nvim** theme, styled to match the tmux status bar.
 | `lazyvim.json` | Install version 8, empty extras array |
 | `lazy-lock.json` | 38 plugins with locked commit hashes for reproducible builds |
 
-### Full Plugin List (38)
+### Full Plugin List (40)
 
 | Category | Plugins |
 |---|---|
@@ -610,13 +645,13 @@ Custom **lualine.nvim** theme, styled to match the tmux status bar.
 | **Treesitter** | nvim-treesitter, nvim-treesitter-textobjects, nvim-ts-autotag, ts-comments.nvim |
 | **Colorschemes** | catppuccin, tokyonight.nvim |
 | **UI** | lualine.nvim, bufferline.nvim, noice.nvim, nui.nvim |
-| **Git** | gitsigns.nvim |
+| **Git** | gitsigns.nvim, diffview.nvim |
 | **Search/Navigation** | grug-far.nvim, flash.nvim, todo-comments.nvim |
 | **Help** | which-key.nvim |
 | **Rust** | rustaceanvim, crates.nvim |
 | **Python** | venv-selector.nvim |
 | **Mini** | mini.ai, mini.icons, mini.pairs |
-| **Utilities** | snacks.nvim, persistence.nvim, SchemaStore.nvim |
+| **Utilities** | snacks.nvim, persistence.nvim, SchemaStore.nvim, vim-obsession |
 | **Media** | image.nvim (disabled) |
 | **Diagnostics** | trouble.nvim |
 
