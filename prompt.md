@@ -906,6 +906,26 @@ vim.filetype.add({
 })
 
 return {
+  -- Custom Salesforce file icons (blue cloud for Apex, variants for SOQL/SOSL)
+  {
+    "echasnovski/mini.icons",
+    opts = {
+      filetype = {
+        apex = { glyph = "󰅩", hl = "MiniIconsBlue" },
+        soql = { glyph = "󰆼", hl = "MiniIconsCyan" },
+        sosl = { glyph = "󰍉", hl = "MiniIconsCyan" },
+        sflog = { glyph = "󰌱", hl = "MiniIconsGrey" },
+      },
+      extension = {
+        cls = { glyph = "󰅩", hl = "MiniIconsBlue" },
+        trigger = { glyph = "󱐋", hl = "MiniIconsOrange" },
+        soql = { glyph = "󰆼", hl = "MiniIconsCyan" },
+        sosl = { glyph = "󰍉", hl = "MiniIconsCyan" },
+        sflog = { glyph = "󰌱", hl = "MiniIconsGrey" },
+      },
+    },
+  },
+
   -- Apex Language Server (only if JAR is found)
   {
     "neovim/nvim-lspconfig",

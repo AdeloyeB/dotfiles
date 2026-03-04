@@ -638,6 +638,16 @@ Full Salesforce development environment with LSP, treesitter, formatting, filety
 | `.auradoc`, `.design`, `.evt`, `.intf`, `.tokens`, `.object`, `.layout`, `.permissionset`, `.profile`, `.workflow` | `xml` |
 | LWC files in `force-app/**/lwc/` | `html`/`javascript` (pattern-matched) |
 
+#### File Icons (mini.icons)
+
+| Extension | Icon | Color | Highlight Group |
+|---|---|---|---|
+| `.cls` | 󰅩 (code braces) | Sky blue | `MiniIconsBlue` |
+| `.trigger` | 󱐋 (lightning bolt) | Orange | `MiniIconsOrange` |
+| `.soql` | 󰆼 (database) | Cyan | `MiniIconsCyan` |
+| `.sosl` | 󰍉 (search) | Cyan | `MiniIconsCyan` |
+| `.sflog` | 󰌱 (log) | Grey | `MiniIconsGrey` |
+
 #### Apex Language Server
 
 Auto-detects the `apex-jorje-lsp.jar` from the latest installed Salesforce VS Code extension. Requires Java (`JAVA_HOME` or `java` in PATH).
