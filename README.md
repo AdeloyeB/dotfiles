@@ -55,6 +55,7 @@ terminal-config/
 │           ├── editor.lua
 │           ├── git.lua
 │           ├── image.lua
+│           ├── salesforce.lua
 │           └── ui.lua
 ├── zsh/
 │   ├── zshrc
@@ -475,7 +476,8 @@ All of the following parsers are set to auto-install:
 
 ```
 bash, css, html, javascript, json, lua, markdown, markdown_inline,
-python, rust, svelte, toml, tsx, typescript, yaml, c_sharp, java, kotlin, xml
+python, rust, svelte, toml, tsx, typescript, yaml, c_sharp, java, kotlin, xml,
+apex, soql, sosl, sflog
 ```
 
 #### Mason Tools (Auto-Installed)
@@ -500,6 +502,7 @@ python, rust, svelte, toml, tsx, typescript, yaml, c_sharp, java, kotlin, xml
 | `ruff` | Python (linting/formatting) | LazyVim Python extra |
 | `tailwindcss-language-server` | Tailwind CSS | LazyVim Tailwind extra |
 | `lua_ls` | Lua | LazyVim built-in |
+| `apex_ls` | Apex (Salesforce) | Configured in `salesforce.lua`, auto-detects JAR from VS Code extension |
 
 ### Colorscheme
 
@@ -617,6 +620,62 @@ Side-by-side diff viewer for reviewing AI-generated changes. Auto-refreshes ever
 
 Auto-maintains `Session.vim` for tmux-resurrect. The `auto_obsession` autocmd starts tracking automatically on `VimEnter`.
 
+### Salesforce Support
+
+**File:** `lua/plugins/salesforce.lua`
+
+Full Salesforce development environment with LSP, treesitter, formatting, filetype detection, and CLI integration.
+
+#### Filetype Detection
+
+| Extension | Detected As |
+|---|---|
+| `.cls`, `.trigger`, `.apex` | `apex` |
+| `.soql` | `soql` |
+| `.sosl` | `sosl` |
+| `.sflog` | `sflog` |
+| `.cmp`, `.page`, `.component`, `.email` | `html` (Aura/Visualforce) |
+| `.auradoc`, `.design`, `.evt`, `.intf`, `.tokens`, `.object`, `.layout`, `.permissionset`, `.profile`, `.workflow` | `xml` |
+| LWC files in `force-app/**/lwc/` | `html`/`javascript` (pattern-matched) |
+
+#### Apex Language Server
+
+Auto-detects the `apex-jorje-lsp.jar` from the latest installed Salesforce VS Code extension. Requires Java (`JAVA_HOME` or `java` in PATH).
+
+| Setting | Value |
+|---|---|
+| Semantic errors | Enabled |
+| Filetypes | `apex` |
+| JAR source | Auto-detected from `~/.vscode/extensions/salesforce.salesforcedx-vscode-apex-*/dist/` |
+
+#### Apex Formatting
+
+Uses `prettier` with `prettier-plugin-apex` (installed globally via npm). Configured through `conform.nvim` for `.cls`, `.trigger`, and `.apex` files.
+
+#### sf.nvim Keybindings (`<leader>sf` — "Salesforce" in which-key)
+
+| Keybinding | Action |
+|---|---|
+| `<leader>sff` | Push current file to org |
+| `<leader>sfF` | Pull metadata list |
+| `<leader>sfl` | List metadata |
+| `<leader>sft` | Run current test |
+| `<leader>sfT` | Run all tests in file |
+| `<leader>sfs` | Select tests to run |
+| `<leader>sfo` | Fetch org list |
+| `<leader>sfO` | Set target org |
+| `<leader>sfm` | List metadata types |
+| `<leader>sfM` | Pull metadata types |
+
+#### Salesforce Dependencies
+
+| Dependency | Purpose |
+|---|---|
+| Salesforce CLI (`sf`) | Metadata operations, org management |
+| Java 21+ | Apex Language Server runtime |
+| `prettier-plugin-apex` (npm global) | Apex code formatting |
+| Salesforce VS Code extension | Provides `apex-jorje-lsp.jar` |
+
 ### Image Support
 
 **File:** `lua/plugins/image.lua`
@@ -634,7 +693,7 @@ Auto-maintains `Session.vim` for tmux-resurrect. The `auto_obsession` autocmd st
 | `lazyvim.json` | Install version 8, empty extras array |
 | `lazy-lock.json` | 38 plugins with locked commit hashes for reproducible builds |
 
-### Full Plugin List (40)
+### Full Plugin List (41)
 
 | Category | Plugins |
 |---|---|
@@ -650,6 +709,7 @@ Auto-maintains `Session.vim` for tmux-resurrect. The `auto_obsession` autocmd st
 | **Help** | which-key.nvim |
 | **Rust** | rustaceanvim, crates.nvim |
 | **Python** | venv-selector.nvim |
+| **Salesforce** | sf.nvim |
 | **Mini** | mini.ai, mini.icons, mini.pairs |
 | **Utilities** | snacks.nvim, persistence.nvim, SchemaStore.nvim, vim-obsession |
 | **Media** | image.nvim (disabled) |

@@ -32,6 +32,10 @@ return {
         "java",
         "kotlin",
         "xml",
+        "apex",
+        "soql",
+        "sosl",
+        "sflog",
       })
     end,
   },
