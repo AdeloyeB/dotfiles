@@ -53,6 +53,7 @@ terminal-config/
 │       └── plugins/
 │           ├── colorscheme.lua
 │           ├── editor.lua
+│           ├── example.lua
 │           ├── git.lua
 │           ├── image.lua
 │           ├── salesforce.lua
@@ -233,7 +234,7 @@ These escape sequences are captured in `tmux.conf` and mapped to the correspondi
 | `tmux-resurrect` | Persist sessions across tmux server restarts | `@resurrect-strategy-nvim 'session'` (restores vim-obsession sessions) |
 | `tmux-open` | Open files and URLs from tmux copy mode | -- |
 | `tmux-fingers` | Quick text selection and copy (like vimium hints) | -- |
-| `tmux-floax` | Floating pane support | Size: 80% x 80%; border color: `#282828`; text color: `#A0A0A0`; bind: Prefix + `Ctrl+F`; popup bg: `#101010` |
+| `tmux-floax` | Floating pane support | Size: 80% x 80%; border color: `#282828`; text color: `#A0A0A0`; bind: Prefix + `Ctrl+F` (manual binding bypasses plugin's broken path); popup bg: `#101010` |
 | `tmux-which-key` | Keybinding help overlay | -- |
 | `tmux-autoreload` | Automatically reloads tmux config on file change | Requires `entr` (`brew install entr`) |
 | `tmux-git-autofetch` | Automatically fetches git changes in background | -- |
@@ -263,6 +264,7 @@ These escape sequences are captured in `tmux.conf` and mapped to the correspondi
 | `K` | Yes (repeatable) | Resize pane up 5px |
 | `L` | Yes (repeatable) | Resize pane right 5px |
 | `Ctrl+F` | Yes | Toggle floating pane (floax) |
+| `P` | Yes | Floax menu |
 
 #### Other
 
@@ -282,6 +284,7 @@ The tmux status bar is styled to match the Vesper palette used in Ghostty and Ne
 | Element | Style |
 |---|---|
 | Position | Top |
+| Status lines | 2 (content + empty spacer line for visual padding) |
 | Status bar background | `#101010` |
 | Status bar foreground | `#A0A0A0` |
 | Status left | Peach accent (`#FFC799`), bold, shows session name |
@@ -301,7 +304,7 @@ The tmux status bar is styled to match the Vesper palette used in Ghostty and Ne
 | Element | Color |
 |---|---|
 | Pane borders (inactive) | `#282828` |
-| Pane borders (active) | Peach accent (`#FFC799`) |
+| Pane borders (active) | `#282828` (matches inactive — no accent) |
 | Pane border lines | Simple |
 | Messages | White on `#232323` |
 | Copy mode | White on `#232323` |
@@ -506,6 +509,21 @@ apex, soql, sosl, sflog
 | Priority | 1000 (loads first) |
 
 LazyVim is also configured to use `vesper` as its colorscheme.
+
+#### Neo-tree Highlight Overrides
+
+Custom highlight groups applied after colorscheme load to give the Neo-tree sidebar a seamless Vesper look with a blue accent:
+
+| Highlight Group | Style |
+|---|---|
+| `NeoTreeNormal` / `NeoTreeNormalNC` | bg `#101010` (match editor) |
+| `NeoTreeEndOfBuffer` | bg + fg `#101010` (hide tildes) |
+| `NeoTreeWinSeparator` | bg `#101010`, fg `#282828` |
+| `NeoTreeCursorLine` | bg `#1A1A1A` |
+| `NeoTreeDirectoryIcon` / `NeoTreeDirectoryName` | fg `#58A6FF` (blue) |
+| `NeoTreeRootName` | fg `#58A6FF`, bold |
+| `NeoTreeTabActive` | fg `#58A6FF`, bold |
+| `NeoTreeTabInactive` | fg `#5C5C5C` |
 
 ### Statusline
 

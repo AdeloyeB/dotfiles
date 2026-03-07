@@ -185,7 +185,7 @@ Copy the exact contents of `tmux/tmux.conf` from this repository. Key settings:
 - **General:** base-index 1, renumber-windows on, allow-rename off, automatic-rename off, escape-time 0
 - **Plugins (TPM):** tpm, tmux-sensible, tmux-yank, tmux-resurrect, tmux-continuum, tmux-open, tmux-fingers, tmux-floax, tmux-which-key, tmux-autoreload, tmux-git-autofetch
 - **Mouse & Clipboard:** `set -g mouse on` BEFORE TPM, `@yank_selection_mouse 'clipboard'`, `@yank_action 'copy-pipe-and-cancel'`
-- **Floax:** 80% x 80%, bind `C-f` (with prefix), border `#282828`, text `#A0A0A0`
+- **Floax:** 80% x 80%, bind `C-f` (with prefix, manual binding bypasses plugin's broken path), menu `P` (with prefix), border `#282828`, text `#A0A0A0`
 - **Popup:** bg `#101010`, border `#282828`
 - **Continuum:** auto-restore on, save interval 10m, resurrect nvim session strategy
 - **Terminal:** `tmux-256color`, RGB overrides for xterm-256color and xterm-ghostty, allow-passthrough on
@@ -195,13 +195,14 @@ Copy the exact contents of `tmux/tmux.conf` from this repository. Key settings:
 | Element | Value |
 |---|---|
 | Status position | Top |
+| Status lines | 2 (content + empty spacer for visual padding) |
 | Status bg | `#101010` |
 | Status fg | `#A0A0A0` |
 | Status left | `#[fg=#FFC799,bold] #S #[fg=#5C5C5C]│ ` |
 | Status right | `#[fg=#A0A0A0]%-I:%M %p ` |
 | Current window | `#[fg=#FFFFFF,bold] #I #W ` |
 | Inactive window | `#[fg=#5C5C5C] #I #W ` |
-| Pane borders | Simple lines, `#282828` inactive, `#FFC799` active |
+| Pane borders | Simple lines, `#282828` both active and inactive (no accent) |
 | Messages | White on `#232323` |
 | Copy mode | White on `#232323` |
 | Clock | `#FFC799` |
@@ -221,6 +222,7 @@ Copy the exact contents of `tmux/tmux.conf` from this repository. Key settings:
 | `f` | Yes | FZF pane search |
 | `Z` | Yes | Zoxide directory picker |
 | `Ctrl+F` | Yes | Toggle floax |
+| `P` | Yes | Floax menu |
 
 ### 4.2 tmux Helper Scripts
 
@@ -532,6 +534,19 @@ return {
         transparent = false,
       })
       vim.cmd.colorscheme("vesper")
+
+      -- Neo-tree sidebar: match editor bg, light blue accent (Warp-style)
+      local blue = "#58A6FF"
+      vim.api.nvim_set_hl(0, "NeoTreeNormal", { bg = "#101010" })
+      vim.api.nvim_set_hl(0, "NeoTreeNormalNC", { bg = "#101010" })
+      vim.api.nvim_set_hl(0, "NeoTreeEndOfBuffer", { bg = "#101010", fg = "#101010" })
+      vim.api.nvim_set_hl(0, "NeoTreeWinSeparator", { bg = "#101010", fg = "#282828" })
+      vim.api.nvim_set_hl(0, "NeoTreeCursorLine", { bg = "#1A1A1A" })
+      vim.api.nvim_set_hl(0, "NeoTreeDirectoryIcon", { fg = blue })
+      vim.api.nvim_set_hl(0, "NeoTreeDirectoryName", { fg = blue })
+      vim.api.nvim_set_hl(0, "NeoTreeRootName", { fg = blue, bold = true })
+      vim.api.nvim_set_hl(0, "NeoTreeTabActive", { fg = blue, bold = true })
+      vim.api.nvim_set_hl(0, "NeoTreeTabInactive", { fg = "#5C5C5C" })
     end,
   },
 
