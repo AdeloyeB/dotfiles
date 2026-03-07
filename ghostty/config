@@ -3,12 +3,10 @@
 
 theme = Vesper
 font-family = Hack Nerd Font Mono
-font-size = 18
+font-size = 14
 window-padding-x = 8
 window-padding-y = 8
-macos-titlebar-style = transparent
-title = " "
-macos-titlebar-proxy-icon = hidden
+macos-titlebar-style = hidden
 cursor-style = block
 cursor-style-blink = false
 shell-integration-features = no-cursor

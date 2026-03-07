@@ -174,7 +174,7 @@ Uses Ghostty's built-in `Vesper` theme (`theme = Vesper`). All colors are provid
 ### Font
 
 - **Family:** Hack Nerd Font Mono
-- **Size:** 18pt
+- **Size:** 14pt
 
 ### Window
 
@@ -182,8 +182,7 @@ Uses Ghostty's built-in `Vesper` theme (`theme = Vesper`). All colors are provid
 |---|---|
 | Dimensions | 199 columns x 56 rows |
 | Padding | 8px (all sides) |
-| Titlebar | Transparent (`macos-titlebar-style = transparent`) |
-| Proxy icon | Hidden |
+| Titlebar | Hidden (`macos-titlebar-style = hidden`) |
 | Cursor | Block, no blink |
 | Mouse | Hide while typing |
 | Option key | Alt mode (`macos-option-as-alt = true`) |
@@ -212,7 +211,8 @@ These escape sequences are captured in `tmux.conf` and mapped to the correspondi
 | Base index (windows) | 1 |
 | Base index (panes) | 1 |
 | Renumber windows | On |
-| Allow rename | On |
+| Allow rename | Off |
+| Automatic rename | Off |
 | Escape time | 0 (no delay) |
 | Mouse | On (set before TPM for tmux-yank integration) |
 | Default terminal | `tmux-256color` |
@@ -319,7 +319,7 @@ All scripts live in `tmux/scripts/` and are symlinked or referenced from the tmu
 
 ### dev-mode
 
-**Primary session launcher.** Creates a tmux session named `dev` with a specific multi-pane layout. Defined as a shell function in `.zshrc`.
+**Primary session launcher.** Creates a tmux session named `sandbox` with a specific multi-pane layout. Defined as a shell function in `.zshrc`.
 
 | Window | Name | Layout |
 |---|---|---|
@@ -757,7 +757,7 @@ zsh-completions, zsh-history-substring-search
 
 | Function | Purpose |
 |---|---|
-| `dev-mode()` | Launch the dev-mode tmux session (3 windows: claude, opencode, code) |
+| `dev-mode()` | Launch the dev-mode tmux session "sandbox" (3 windows: claude, opencode, code) |
 | `_dev_mode_create()` | Helper for dev-mode session creation |
 | `clip()` | Paste clipboard image to file and print path |
 | `_clip_inline()` | Paste clipboard image path inline at cursor |

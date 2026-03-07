@@ -115,12 +115,10 @@ Create the file at `~/Library/Application Support/com.mitchellh.ghostty/config` 
 
 theme = Vesper
 font-family = Hack Nerd Font Mono
-font-size = 18
+font-size = 14
 window-padding-x = 8
 window-padding-y = 8
-macos-titlebar-style = transparent
-title = " "
-macos-titlebar-proxy-icon = hidden
+macos-titlebar-style = hidden
 cursor-style = block
 cursor-style-blink = false
 shell-integration-features = no-cursor
@@ -164,10 +162,11 @@ Copy the exact contents of `zsh/zshrc` from this repository. Key sections:
 - **Environment:** `BUN_INSTALL`, `JAVA_HOME`, PATH additions for windsurf, bun, local bin, java
 - **Autosuggestions:** ghost text `#666666`, strategy `(history completion)`, buffer max 20
 - **FZF Vesper colors:** `--color=bg:#101010,bg+:#232323,fg:#A0A0A0,fg+:#FFFFFF,hl:#FFC799,hl+:#FFC799,pointer:#FFC799,prompt:#FFC799,info:#5C5C5C`
-- **dev-mode():** Shell function (not a script) that creates a tmux `dev` session with 3 windows:
+- **dev-mode():** Shell function (not a script) that creates a tmux `sandbox` session with 3 windows:
   - Window 1 "claude": 3-pane layout (60/40 split, right split vertically), all panes run `claude --dangerously-skip-permissions`
   - Window 2 "opencode": single pane, auto-runs `opencode`
   - Window 3 "code": empty shell
+  - After creating windows, sources `~/.tmux.conf` to ensure TPM plugins are loaded
   - `dev-mode reload` kills and recreates the session
 - **clip():** Paste clipboard image to `/tmp/clip-<timestamp>.png`
 - **_clip_inline():** ZLE widget bound to `Ctrl+X Ctrl+V`, pastes image path at cursor
@@ -183,7 +182,7 @@ Copy the exact contents of `zsh/zshrc` from this repository. Key sections:
 Copy the exact contents of `tmux/tmux.conf` from this repository. Key settings:
 
 - **Prefix:** `Ctrl+A` (unbinds `Ctrl+B`)
-- **General:** base-index 1, renumber-windows on, allow-rename on, escape-time 0
+- **General:** base-index 1, renumber-windows on, allow-rename off, automatic-rename off, escape-time 0
 - **Plugins (TPM):** tpm, tmux-sensible, tmux-yank, tmux-resurrect, tmux-continuum, tmux-open, tmux-fingers, tmux-floax, tmux-which-key, tmux-autoreload, tmux-git-autofetch
 - **Mouse & Clipboard:** `set -g mouse on` BEFORE TPM, `@yank_selection_mouse 'clipboard'`, `@yank_action 'copy-pipe-and-cancel'`
 - **Floax:** 80% x 80%, bind `C-f` (with prefix), border `#282828`, text `#A0A0A0`
@@ -237,7 +236,7 @@ All scripts below go in `~/.local/bin/` and must be made executable with `chmod 
 
 **Note:** `dev-mode` is now a shell function defined directly in `.zshrc`, not a separate script in `~/.local/bin/`. The `~/.local/bin/dev-mode` script is no longer used.
 
-The function creates a tmux `dev` session with 3 windows:
+The function creates a tmux `sandbox` session with 3 windows:
 
 | Window | Name | Layout | Auto-run |
 |---|---|---|---|
