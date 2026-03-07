@@ -123,6 +123,7 @@ echo ""
 echo "--- OpenCode ---"
 link_file "$SCRIPT_DIR/opencode/opencode.json"         "$HOME/.config/opencode/opencode.json"
 link_file "$SCRIPT_DIR/opencode/oh-my-opencode.json"   "$HOME/.config/opencode/oh-my-opencode.json"
+link_file "$SCRIPT_DIR/opencode/tui.json"              "$HOME/.config/opencode/tui.json"
 
 # ── Git ────────────────────────────────────────────────────────
 echo ""

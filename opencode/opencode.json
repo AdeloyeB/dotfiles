@@ -21,11 +21,6 @@
   "plugin": [
     "oh-my-opencode"
   ],
-  "keybinds": {
-    "session_interrupt": "ctrl+c",
-    "input_clear": "ctrl+u",
-    "app_exit": "ctrl+d,<leader>q"
-  },
   "mcp": {
     "apigcp": {
       "type": "remote",

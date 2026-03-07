@@ -807,6 +807,7 @@ Create the directory `~/.config/opencode/` if it does not exist. Symlink the fol
 
 ```bash
 ln -sf ~/dotfiles/opencode/opencode.json ~/.config/opencode/opencode.json
+ln -sf ~/dotfiles/opencode/tui.json ~/.config/opencode/tui.json
 ln -sf ~/dotfiles/opencode/oh-my-opencode.json ~/.config/opencode/oh-my-opencode.json
 ```
 
@@ -814,10 +815,16 @@ ln -sf ~/dotfiles/opencode/oh-my-opencode.json ~/.config/opencode/oh-my-opencode
 
 Main configuration for Open Code AI coding agent. Key settings:
 
-- **Theme:** `vesper`
 - **Provider:** OpenRouter
 - **Models:** claude-sonnet-4.6 (general/explore), claude-opus-4.6 (plan), gpt-5.3-codex (build), gemini-2.5-flash (small)
 - **Plugin:** `oh-my-opencode`
+- **MCP Servers:** apigcp (Nia) enabled; context7 and grep_app disabled.
+
+### `opencode/tui.json`
+
+TUI-specific config (theme and keybindings). Open Code moved these out of `opencode.json` in v1.2+.
+
+- **Theme:** `vesper`
 
 **Keybindings (Claude Code-style):**
 
@@ -826,8 +833,6 @@ Main configuration for Open Code AI coding agent. Key settings:
 | `Ctrl+C` | Interrupt AI session (default: `Escape`) |
 | `Ctrl+U` | Clear input field (default: `Ctrl+C`) |
 | `Ctrl+D` / `<leader>q` | Exit application |
-
-**MCP Servers:** apigcp (Nia) enabled; context7 and grep_app disabled.
 
 ### `opencode/oh-my-opencode.json`
 
@@ -941,5 +946,6 @@ Run these steps in order after all files are in place:
 | `~/.config/nvim/lazyvim.json` | LazyVim version metadata |
 | `~/.config/nvim/.gitignore` | Neovim gitignore |
 | `~/.config/opencode/opencode.json` | Open Code main config (symlink) |
+| `~/.config/opencode/tui.json` | Open Code TUI config — theme, keybindings (symlink) |
 | `~/.config/opencode/oh-my-opencode.json` | oh-my-opencode plugin config (symlink) |
 | `~/.gitconfig` | Git user config (template) |

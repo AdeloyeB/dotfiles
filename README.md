@@ -41,6 +41,7 @@ dotfiles/
 │   └── lgt
 ├── opencode/
 │   ├── opencode.json                # Open Code main config
+│   ├── tui.json                     # TUI config (theme, keybindings)
 │   └── oh-my-opencode.json          # oh-my-opencode plugin config
 ├── nvim/                        # Full LazyVim configuration
 │   ├── init.lua
@@ -844,6 +845,22 @@ Sets up the Homebrew environment (`PATH`, `HOMEBREW_PREFIX`, etc.) for Apple Sil
 | General | `openrouter/anthropic/claude-sonnet-4.6` |
 | Explore | `openrouter/anthropic/claude-sonnet-4.6` |
 
+#### MCP Servers
+
+| Server | Type | Status |
+|---|---|---|
+| `apigcp` (Nia) | Remote | Enabled |
+| `context7` | -- | Disabled |
+| `grep_app` | -- | Disabled |
+
+### TUI Config
+
+**File:** `opencode/tui.json`
+
+| Setting | Value |
+|---|---|
+| Theme | `vesper` |
+
 #### Keybindings
 
 Custom keybindings to match Claude Code behavior:
@@ -853,14 +870,6 @@ Custom keybindings to match Claude Code behavior:
 | `Ctrl+C` | Interrupt AI session | Default was `Escape` |
 | `Ctrl+U` | Clear input field | Default was `Ctrl+C` |
 | `Ctrl+D` / `<leader>q` | Exit application | Removed `Ctrl+C` from exit |
-
-#### MCP Servers
-
-| Server | Type | Status |
-|---|---|---|
-| `apigcp` (Nia) | Remote | Enabled |
-| `context7` | -- | Disabled |
-| `grep_app` | -- | Disabled |
 
 ### Plugin Config
 
