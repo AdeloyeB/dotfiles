@@ -118,6 +118,12 @@ echo ""
 echo "--- Neovim ---"
 link_dir "$SCRIPT_DIR/nvim" "$HOME/.config/nvim"
 
+# ── OpenCode ──────────────────────────────────────────────────
+echo ""
+echo "--- OpenCode ---"
+link_file "$SCRIPT_DIR/opencode/opencode.json"         "$HOME/.config/opencode/opencode.json"
+link_file "$SCRIPT_DIR/opencode/oh-my-opencode.json"   "$HOME/.config/opencode/oh-my-opencode.json"
+
 # ── Git ────────────────────────────────────────────────────────
 echo ""
 echo "--- Git ---"

@@ -17,7 +17,8 @@ This document covers every configuration file, keybinding, plugin, color value, 
 7. [Tmux Scripts](#tmux-scripts)
 8. [Neovim](#neovim)
 9. [Zsh Shell](#zsh-shell)
-10. [Git](#git)
+10. [Open Code](#open-code)
+11. [Git](#git)
 
 ---
 
@@ -38,6 +39,9 @@ terminal-config/
 │   ├── tmux-switch-session
 │   ├── tmux-learning-cloud
 │   └── lgt
+├── opencode/
+│   ├── opencode.json                # Open Code main config
+│   └── oh-my-opencode.json          # oh-my-opencode plugin config
 ├── nvim/                        # Full LazyVim configuration
 │   ├── init.lua
 │   ├── stylua.toml
@@ -810,6 +814,59 @@ Sets up the Homebrew environment (`PATH`, `HOMEBREW_PREFIX`, etc.) for Apple Sil
 
 - Sources `~/.cargo/env` to add the Rust toolchain (`rustc`, `cargo`, `rustup`) to `PATH`.
 - Adds Foundry binary directory to `PATH` (Ethereum development toolkit).
+
+---
+
+## Open Code
+
+**Directory:** `opencode/`
+
+[Open Code](https://opencode.ai) is a terminal-based AI coding agent (similar to Claude Code). Configuration is symlinked from the repo to `~/.config/opencode/`.
+
+### Main Config
+
+**File:** `opencode/opencode.json`
+
+| Setting | Value |
+|---|---|
+| Theme | `vesper` |
+| Model | `openrouter/anthropic/claude-sonnet-4.6` |
+| Small model | `openrouter/google/gemini-2.5-flash` |
+| Provider | OpenRouter |
+| Plugin | `oh-my-opencode` |
+
+#### Agent Models
+
+| Agent | Model |
+|---|---|
+| Build | `openrouter/openai/gpt-5.3-codex` |
+| Plan | `openrouter/anthropic/claude-opus-4.6` |
+| General | `openrouter/anthropic/claude-sonnet-4.6` |
+| Explore | `openrouter/anthropic/claude-sonnet-4.6` |
+
+#### Keybindings
+
+Custom keybindings to match Claude Code behavior:
+
+| Keybind | Action | Notes |
+|---|---|---|
+| `Ctrl+C` | Interrupt AI session | Default was `Escape` |
+| `Ctrl+U` | Clear input field | Default was `Ctrl+C` |
+| `Ctrl+D` / `<leader>q` | Exit application | Removed `Ctrl+C` from exit |
+
+#### MCP Servers
+
+| Server | Type | Status |
+|---|---|---|
+| `apigcp` (Nia) | Remote | Enabled |
+| `context7` | -- | Disabled |
+| `grep_app` | -- | Disabled |
+
+### Plugin Config
+
+**File:** `opencode/oh-my-opencode.json`
+
+Disables `context7` and `grep_app` MCP servers via the oh-my-opencode plugin.
 
 ---
 

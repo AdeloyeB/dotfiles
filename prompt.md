@@ -801,7 +801,45 @@ data
 
 ---
 
-## 6. Git Configuration
+## 6. Open Code Configuration
+
+Create the directory `~/.config/opencode/` if it does not exist. Symlink the following files:
+
+```bash
+ln -sf ~/terminal-config/opencode/opencode.json ~/.config/opencode/opencode.json
+ln -sf ~/terminal-config/opencode/oh-my-opencode.json ~/.config/opencode/oh-my-opencode.json
+```
+
+### `opencode/opencode.json`
+
+Main configuration for Open Code AI coding agent. Key settings:
+
+- **Theme:** `vesper`
+- **Provider:** OpenRouter
+- **Models:** claude-sonnet-4.6 (general/explore), claude-opus-4.6 (plan), gpt-5.3-codex (build), gemini-2.5-flash (small)
+- **Plugin:** `oh-my-opencode`
+
+**Keybindings (Claude Code-style):**
+
+| Keybind | Action |
+|---|---|
+| `Ctrl+C` | Interrupt AI session (default: `Escape`) |
+| `Ctrl+U` | Clear input field (default: `Ctrl+C`) |
+| `Ctrl+D` / `<leader>q` | Exit application |
+
+**MCP Servers:** apigcp (Nia) enabled; context7 and grep_app disabled.
+
+### `opencode/oh-my-opencode.json`
+
+```json
+{
+  "disabled_mcps": ["context7", "grep_app"]
+}
+```
+
+---
+
+## 7. Git Configuration
 
 Create `~/.gitconfig` with the following template. Replace `{{NAME}}` and `{{EMAIL}}` with the user's actual name and email address:
 
@@ -815,7 +853,7 @@ Create `~/.gitconfig` with the following template. Replace `{{NAME}}` and `{{EMA
 
 ---
 
-## 7. Unified Color Palette Reference (Vesper)
+## 8. Unified Color Palette Reference (Vesper)
 
 This is the single source of truth for the color theme used across Ghostty, tmux, Neovim, FZF, and lualine. The theme is **Vesper** by nexxeln.
 
@@ -837,7 +875,7 @@ This is the single source of truth for the color theme used across Ghostty, tmux
 
 ---
 
-## 8. Post-Installation Steps
+## 9. Post-Installation Steps
 
 Run these steps in order after all files are in place:
 
@@ -902,4 +940,6 @@ Run these steps in order after all files are in place:
 | `~/.config/nvim/.neoconf.json` | Neodev/LSP settings |
 | `~/.config/nvim/lazyvim.json` | LazyVim version metadata |
 | `~/.config/nvim/.gitignore` | Neovim gitignore |
+| `~/.config/opencode/opencode.json` | Open Code main config (symlink) |
+| `~/.config/opencode/oh-my-opencode.json` | oh-my-opencode plugin config (symlink) |
 | `~/.gitconfig` | Git user config (template) |
