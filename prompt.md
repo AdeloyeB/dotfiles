@@ -33,7 +33,7 @@ eval $(/opt/homebrew/bin/brew shellenv)
 ### 1.2 Homebrew Packages
 
 ```bash
-brew install neovim tmux fzf ripgrep fd lazygit node python pngpaste zoxide eza imagemagick entr
+brew install neovim tmux fzf ripgrep fd lazygit node python pngpaste zoxide eza imagemagick entr opencode
 ```
 
 ### 1.3 Rust Toolchain
@@ -803,36 +803,106 @@ data
 
 ## 6. Open Code Configuration
 
-Create the directory `~/.config/opencode/` if it does not exist. Symlink the following files:
+Install Open Code via Homebrew:
 
 ```bash
+brew install opencode
+```
+
+### Config Architecture (IMPORTANT)
+
+Open Code uses **two separate config files**. Getting this wrong will silently break keybindings:
+
+- **`opencode.json`** — Models, providers, agents, MCP servers, plugins
+- **`tui.json`** — Theme, keybindings (anything TUI-related)
+
+**DO NOT put `keybinds` or `theme` in `opencode.json`.** Open Code v1.2+ migrated these to `tui.json`. If they appear in `opencode.json`, the app silently deletes them from memory at startup (the file on disk looks correct, but the values are never applied). You will see defaults instead of your custom settings with no visible error — only a deprecation warning in debug logs.
+
+### Step-by-step Setup
+
+#### 1. Create the config directory and symlinks
+
+```bash
+mkdir -p ~/.config/opencode
 ln -sf ~/dotfiles/opencode/opencode.json ~/.config/opencode/opencode.json
 ln -sf ~/dotfiles/opencode/tui.json ~/.config/opencode/tui.json
 ln -sf ~/dotfiles/opencode/oh-my-opencode.json ~/.config/opencode/oh-my-opencode.json
 ```
 
+#### 2. Install the oh-my-opencode plugin
+
+```bash
+cd ~/.config/opencode && bun install oh-my-opencode
+```
+
+This creates `node_modules/` and `bun.lock` inside `~/.config/opencode/`. These are local dependencies and should NOT be committed to the dotfiles repo.
+
+#### 3. Verify the config loads correctly
+
+```bash
+opencode debug config
+```
+
+Check that your models, keybindings, and MCP servers appear in the output.
+
 ### `opencode/opencode.json`
 
-Main configuration for Open Code AI coding agent. Key settings:
+Copy the exact contents of `opencode/opencode.json` from this repository. Key settings:
 
-- **Provider:** OpenRouter
-- **Models:** claude-sonnet-4.6 (general/explore), claude-opus-4.6 (plan), gpt-5.3-codex (build), gemini-2.5-flash (small)
-- **Plugin:** `oh-my-opencode`
-- **MCP Servers:** apigcp (Nia) enabled; context7 and grep_app disabled.
+- **`$schema`:** `https://opencode.ai/config.json`
+- **`enabled_providers`:** `["openrouter"]` — uses OpenRouter as the model provider
+- **`model`:** `openrouter/anthropic/claude-sonnet-4.6` — default model for conversations
+- **`small_model`:** `openrouter/google/gemini-2.5-flash` — used for lightweight tasks
+- **`plugin`:** `["oh-my-opencode"]` — loads the oh-my-opencode community plugin
+- **Agent models:**
+  - `build`: `openrouter/openai/gpt-5.3-codex` (autonomous deep work)
+  - `plan`: `openrouter/anthropic/claude-opus-4.6` (architecture and planning)
+  - `general`: `openrouter/anthropic/claude-sonnet-4.6` (default agent)
+  - `explore`: `openrouter/anthropic/claude-sonnet-4.6` (codebase exploration)
+- **MCP servers:**
+  - `apigcp` (Nia): enabled, remote server at `https://apigcp.trynia.ai/mcp`
+  - `context7`: disabled
+  - `grep_app`: disabled
+
+**DO NOT add `keybinds`, `theme`, or `tui` keys to this file.** They belong in `tui.json`.
 
 ### `opencode/tui.json`
 
-TUI-specific config (theme and keybindings). Open Code moved these out of `opencode.json` in v1.2+.
+Create this file with the following exact contents:
 
-- **Theme:** `vesper`
+```json
+{
+  "$schema": "https://opencode.ai/tui.json",
+  "theme": "vesper",
+  "keybinds": {
+    "session_interrupt": "ctrl+c",
+    "input_clear": "ctrl+u",
+    "app_exit": "ctrl+d,<leader>q"
+  }
+}
+```
 
-**Keybindings (Claude Code-style):**
+**Why these keybindings:**
 
-| Keybind | Action |
-|---|---|
-| `Ctrl+C` | Interrupt AI session (default: `Escape`) |
-| `Ctrl+U` | Clear input field (default: `Ctrl+C`) |
-| `Ctrl+D` / `<leader>q` | Exit application |
+| Key | Value | Open Code Default | Reason |
+|---|---|---|---|
+| `session_interrupt` | `ctrl+c` | `escape` | Matches Claude Code behavior. `Escape` is often bound to other actions (e.g., tmux detach via double-escape). `Ctrl+C` is the universal "stop" signal. |
+| `input_clear` | `ctrl+u` | `ctrl+c` | Since `Ctrl+C` now interrupts the AI, input clearing moves to `Ctrl+U` — the standard Unix "kill line" shortcut used in bash/zsh. Consistent muscle memory. |
+| `app_exit` | `ctrl+d,<leader>q` | `ctrl+c,ctrl+d,<leader>q` | Removed `Ctrl+C` from exit to avoid conflicts with the new interrupt binding. `Ctrl+D` (EOF signal) is sufficient for exiting. |
+
+**Full list of configurable keybind keys:**
+
+| Key | Default | Description |
+|---|---|---|
+| `leader` | `ctrl+x` | Leader key for keybind combinations |
+| `app_exit` | `ctrl+c,ctrl+d,<leader>q` | Exit the application |
+| `session_interrupt` | `escape` | Interrupt current AI session |
+| `input_clear` | `ctrl+c` | Clear input field |
+| `input_submit` | `return` | Submit input |
+| `editor_open` | `<leader>e` | Open external editor |
+| `display_thinking` | `none` | Toggle thinking blocks visibility |
+
+Multiple bindings for the same action are comma-separated (e.g., `ctrl+c,ctrl+d`).
 
 ### `opencode/oh-my-opencode.json`
 
@@ -841,6 +911,12 @@ TUI-specific config (theme and keybindings). Open Code moved these out of `openc
   "disabled_mcps": ["context7", "grep_app"]
 }
 ```
+
+Disables `context7` and `grep_app` MCP servers that come bundled with oh-my-opencode. These are not needed because Nia (`apigcp`) handles knowledge indexing and search.
+
+### Update Safety
+
+Open Code updates (`brew upgrade opencode`) only replace the binary in `/opt/homebrew/Cellar/opencode/`. User config in `~/.config/opencode/` is never touched — keybindings, theme, models, and MCP servers persist across all updates.
 
 ---
 
@@ -914,6 +990,16 @@ Run these steps in order after all files are in place:
    ```
 
 7. **Verify Hack Nerd Font Mono** is installed and selected in Ghostty (font-family setting in the Ghostty config).
+
+8. **Install Open Code plugin dependencies:**
+   ```bash
+   cd ~/.config/opencode && bun install oh-my-opencode
+   ```
+
+9. **Verify Open Code keybindings work:**
+   - Launch `opencode` in a terminal
+   - Start a conversation and press `Ctrl+C` — it should interrupt the AI session
+   - If `Ctrl+C` doesn't interrupt (and `Escape` does instead), your keybinds are in the wrong file. They must be in `tui.json`, not `opencode.json`. See section 6 for details.
 
 ---
 

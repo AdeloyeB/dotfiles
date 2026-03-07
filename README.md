@@ -1,4 +1,4 @@
-# Terminal Config
+# Dotfiles
 
 A dotfiles repository for a macOS development environment. Every tool shares a unified **Vesper** color theme — a warm, minimal dark palette built around a `#101010` background, peach/amber accent `#FFC799`, and muted greys. Tmux acts as the session-management layer; Neovim (via LazyVim) provides the editor; Ghostty is the terminal emulator; Zsh is the shell.
 
@@ -103,6 +103,7 @@ dotfiles/
 | `zoxide` | Smarter `cd` |
 | `eza` | Modern `ls` replacement |
 | `imagemagick` | Image processing |
+| `opencode` | Terminal AI coding agent |
 
 ### Other Dependencies
 
@@ -822,60 +823,115 @@ Sets up the Homebrew environment (`PATH`, `HOMEBREW_PREFIX`, etc.) for Apple Sil
 
 **Directory:** `opencode/`
 
-[Open Code](https://opencode.ai) is a terminal-based AI coding agent (similar to Claude Code). Configuration is symlinked from the repo to `~/.config/opencode/`.
+[Open Code](https://opencode.ai) is a terminal-based AI coding agent (similar to Claude Code). Installed via Homebrew (`brew install opencode`). Configuration is symlinked from the repo to `~/.config/opencode/`.
 
-### Main Config
+### Config Architecture
 
-**File:** `opencode/opencode.json`
+Open Code splits its configuration across **two files**:
+
+| File | Purpose | Where it lives |
+|---|---|---|
+| `opencode.json` | Models, providers, agents, MCP servers, plugins | `~/.config/opencode/opencode.json` |
+| `tui.json` | Theme, keybindings (anything TUI-related) | `~/.config/opencode/tui.json` |
+
+> **CRITICAL:** Keybindings and theme **must** go in `tui.json`, NOT `opencode.json`. If you put `keybinds` or `theme` in `opencode.json`, Open Code silently strips them at startup (logging a deprecation warning to debug logs) and falls back to defaults. The config file on disk looks correct but the values are never applied. This was split in Open Code v1.2+.
+
+### Symlink Setup
+
+```bash
+mkdir -p ~/.config/opencode
+ln -sf ~/dotfiles/opencode/opencode.json ~/.config/opencode/opencode.json
+ln -sf ~/dotfiles/opencode/tui.json ~/.config/opencode/tui.json
+ln -sf ~/dotfiles/opencode/oh-my-opencode.json ~/.config/opencode/oh-my-opencode.json
+```
+
+### Plugin Setup (oh-my-opencode)
+
+After symlinking, install the oh-my-opencode plugin dependency:
+
+```bash
+cd ~/.config/opencode && bun install oh-my-opencode
+```
+
+This creates `node_modules/` and `bun.lock` in `~/.config/opencode/` (not tracked in the repo).
+
+### Main Config (`opencode.json`)
 
 | Setting | Value |
 |---|---|
-| Theme | `vesper` |
 | Model | `openrouter/anthropic/claude-sonnet-4.6` |
 | Small model | `openrouter/google/gemini-2.5-flash` |
-| Provider | OpenRouter |
+| Provider | OpenRouter (`enabled_providers: ["openrouter"]`) |
 | Plugin | `oh-my-opencode` |
 
 #### Agent Models
 
-| Agent | Model |
-|---|---|
-| Build | `openrouter/openai/gpt-5.3-codex` |
-| Plan | `openrouter/anthropic/claude-opus-4.6` |
-| General | `openrouter/anthropic/claude-sonnet-4.6` |
-| Explore | `openrouter/anthropic/claude-sonnet-4.6` |
+| Agent | Model | Use Case |
+|---|---|---|
+| Build | `openrouter/openai/gpt-5.3-codex` | Autonomous deep work, code generation |
+| Plan | `openrouter/anthropic/claude-opus-4.6` | Architecture, planning, complex reasoning |
+| General | `openrouter/anthropic/claude-sonnet-4.6` | Default conversational agent |
+| Explore | `openrouter/anthropic/claude-sonnet-4.6` | Codebase exploration and search |
 
 #### MCP Servers
 
-| Server | Type | Status |
-|---|---|---|
-| `apigcp` (Nia) | Remote | Enabled |
-| `context7` | -- | Disabled |
-| `grep_app` | -- | Disabled |
+| Server | Type | Status | Notes |
+|---|---|---|---|
+| `apigcp` (Nia) | Remote | Enabled | Knowledge indexing and search agent |
+| `context7` | -- | Disabled | Disabled via oh-my-opencode |
+| `grep_app` | -- | Disabled | Disabled via oh-my-opencode |
 
-### TUI Config
+### TUI Config (`tui.json`)
 
-**File:** `opencode/tui.json`
+This file controls all visual and interaction settings for the terminal UI.
 
-| Setting | Value |
-|---|---|
-| Theme | `vesper` |
+```json
+{
+  "$schema": "https://opencode.ai/tui.json",
+  "theme": "vesper",
+  "keybinds": {
+    "session_interrupt": "ctrl+c",
+    "input_clear": "ctrl+u",
+    "app_exit": "ctrl+d,<leader>q"
+  }
+}
+```
 
 #### Keybindings
 
-Custom keybindings to match Claude Code behavior:
+Custom keybindings to match Claude Code's interrupt behavior:
 
-| Keybind | Action | Notes |
+| Keybind | Action | Open Code Default | Why Changed |
+|---|---|---|---|
+| `Ctrl+C` | Interrupt AI session | `Escape` | Match Claude Code behavior; Escape is often mapped to other functions (e.g., tmux detach) |
+| `Ctrl+U` | Clear input field | `Ctrl+C` | Standard Unix "kill line" shortcut — consistent with shell muscle memory |
+| `Ctrl+D` / `<leader>q` | Exit application | `Ctrl+C`, `Ctrl+D`, `<leader>q` | Removed `Ctrl+C` from exit so it only interrupts; `Ctrl+D` (EOF) is sufficient for exit |
+
+**All available keybind keys** (from Open Code's schema):
+
+| Key | Default | Description |
 |---|---|---|
-| `Ctrl+C` | Interrupt AI session | Default was `Escape` |
-| `Ctrl+U` | Clear input field | Default was `Ctrl+C` |
-| `Ctrl+D` / `<leader>q` | Exit application | Removed `Ctrl+C` from exit |
+| `leader` | `ctrl+x` | Leader key for keybind combinations |
+| `app_exit` | `ctrl+c,ctrl+d,<leader>q` | Exit the application |
+| `session_interrupt` | `escape` | Interrupt current AI session |
+| `input_clear` | `ctrl+c` | Clear input field |
+| `input_submit` | `return` | Submit input |
+| `editor_open` | `<leader>e` | Open external editor |
+| `display_thinking` | `none` | Toggle thinking blocks visibility |
 
-### Plugin Config
+### Plugin Config (`oh-my-opencode.json`)
 
-**File:** `opencode/oh-my-opencode.json`
+```json
+{
+  "disabled_mcps": ["context7", "grep_app"]
+}
+```
 
-Disables `context7` and `grep_app` MCP servers via the oh-my-opencode plugin.
+Disables `context7` and `grep_app` MCP servers. These are built-in to oh-my-opencode but not needed in this setup (Nia handles knowledge indexing).
+
+### Update Safety
+
+Open Code updates (via `brew upgrade opencode`) only replace the binary at `/opt/homebrew/Cellar/opencode/`. User config in `~/.config/opencode/` is never touched. Your keybindings, theme, models, and MCP server settings persist across updates.
 
 ---
 
@@ -905,7 +961,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # Homebrew packages
 brew install neovim tmux fzf ripgrep fd lazygit node python \
-             pngpaste zoxide eza imagemagick
+             pngpaste zoxide eza imagemagick opencode
 
 # Font
 brew install --cask font-hack-nerd-font
@@ -952,10 +1008,17 @@ cd dotfiles
 ./install.sh
 ```
 
-### 5. Post-install
+### 5. Install Open Code plugin dependencies
+
+```bash
+cd ~/.config/opencode && bun install oh-my-opencode
+```
+
+### 6. Post-install
 
 1. Open tmux and press `Ctrl+A` then `I` (capital i) to install all tmux plugins via TPM.
 2. Open Neovim. `lazy.nvim` will auto-bootstrap and install all plugins on first launch.
 3. In Neovim, run `:Mason` to verify all language servers and tools are installed.
 4. Restart the terminal to pick up all Zsh configuration changes.
 5. Run `dev-mode` to launch the primary development session.
+6. In the Open Code window, verify `Ctrl+C` interrupts the AI session (not `Escape`).
