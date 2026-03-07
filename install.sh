@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# install.sh — Symlink terminal-config files into their expected locations
+# install.sh — Symlink dotfiles files into their expected locations
 #
 # Usage:
 #   ./install.sh          # Interactive: prompts before each symlink

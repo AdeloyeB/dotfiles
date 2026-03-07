@@ -25,7 +25,7 @@ This document covers every configuration file, keybinding, plugin, color value, 
 ## Repository Structure
 
 ```
-terminal-config/
+dotfiles/
 ├── README.md
 ├── prompt.md
 ├── install.sh
@@ -939,7 +939,7 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 ### 4. Run the install script
 
 ```bash
-cd terminal-config
+cd dotfiles
 ./install.sh
 ```
 

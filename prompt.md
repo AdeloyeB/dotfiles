@@ -806,8 +806,8 @@ data
 Create the directory `~/.config/opencode/` if it does not exist. Symlink the following files:
 
 ```bash
-ln -sf ~/terminal-config/opencode/opencode.json ~/.config/opencode/opencode.json
-ln -sf ~/terminal-config/opencode/oh-my-opencode.json ~/.config/opencode/oh-my-opencode.json
+ln -sf ~/dotfiles/opencode/opencode.json ~/.config/opencode/opencode.json
+ln -sf ~/dotfiles/opencode/oh-my-opencode.json ~/.config/opencode/oh-my-opencode.json
 ```
 
 ### `opencode/opencode.json`
