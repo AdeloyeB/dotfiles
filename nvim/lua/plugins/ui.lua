@@ -15,7 +15,7 @@ return {
         fg_muted = "#A0A0A0",
         fg_dim = "#7E7E7E",
         comment = "#5C5C5C",
-        accent = "#FFC799",
+        accent = "#7DC4E4",
         mint = "#99FFE4",
         error = "#FF8080",
         border = "#282828",

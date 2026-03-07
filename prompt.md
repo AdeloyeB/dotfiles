@@ -533,20 +533,150 @@ return {
       require("vesper").setup({
         transparent = false,
       })
-      vim.cmd.colorscheme("vesper")
 
-      -- Neo-tree sidebar: match editor bg, light blue accent (Warp-style)
-      local blue = "#58A6FF"
-      vim.api.nvim_set_hl(0, "NeoTreeNormal", { bg = "#101010" })
-      vim.api.nvim_set_hl(0, "NeoTreeNormalNC", { bg = "#101010" })
-      vim.api.nvim_set_hl(0, "NeoTreeEndOfBuffer", { bg = "#101010", fg = "#101010" })
-      vim.api.nvim_set_hl(0, "NeoTreeWinSeparator", { bg = "#101010", fg = "#282828" })
-      vim.api.nvim_set_hl(0, "NeoTreeCursorLine", { bg = "#1A1A1A" })
-      vim.api.nvim_set_hl(0, "NeoTreeDirectoryIcon", { fg = blue })
-      vim.api.nvim_set_hl(0, "NeoTreeDirectoryName", { fg = blue })
-      vim.api.nvim_set_hl(0, "NeoTreeRootName", { fg = blue, bold = true })
-      vim.api.nvim_set_hl(0, "NeoTreeTabActive", { fg = blue, bold = true })
-      vim.api.nvim_set_hl(0, "NeoTreeTabInactive", { fg = "#5C5C5C" })
+      local accent = "#7DC4E4"
+      local bg = "#101010"
+      local bg_elevated = "#1A1A1A"
+      local bg_hover = "#282828"
+      local bg_selected = "#232323"
+      local border = "#282828"
+
+      local function apply_overrides()
+        local hl = vim.api.nvim_set_hl
+
+        -- dashed window separators (match tmux pane borders)
+        vim.opt.fillchars:append({ horiz = "─", horizup = "─", horizdown = "─", vert = "│", vertleft = "│", vertright = "│", verthoriz = "│" })
+        hl(0, "WinSeparator", { fg = "#282828", bg = bg })
+
+        -- editor
+        hl(0, "Cursor", { fg = bg, bg = accent })
+        hl(0, "FloatTitle", { fg = accent, bg = bg_elevated })
+        hl(0, "IncSearch", { fg = bg, bg = accent })
+        hl(0, "CurSearch", { fg = bg, bg = accent })
+        hl(0, "MatchParen", { fg = accent, bg = bg_hover })
+        hl(0, "Directory", { fg = accent })
+        hl(0, "Question", { fg = accent })
+        hl(0, "MoreMsg", { fg = accent })
+        hl(0, "Title", { fg = accent })
+
+        -- diagnostics (prevent orange leaking via linked groups)
+        hl(0, "DiagnosticWarn", { fg = "#E0AF68" })
+        hl(0, "DiagnosticInfo", { fg = accent })
+
+        -- syntax
+        hl(0, "Constant", { fg = accent })
+        hl(0, "Number", { fg = accent })
+        hl(0, "Boolean", { fg = accent })
+        hl(0, "Float", { fg = accent })
+        hl(0, "Function", { fg = accent })
+        hl(0, "Label", { fg = accent })
+        hl(0, "Macro", { fg = accent })
+        hl(0, "Type", { fg = accent })
+        hl(0, "Structure", { fg = accent })
+        hl(0, "Typedef", { fg = accent })
+        hl(0, "Special", { fg = accent })
+        hl(0, "SpecialChar", { fg = accent })
+        hl(0, "Tag", { fg = accent })
+        hl(0, "Underlined", { fg = accent, underline = true })
+        hl(0, "Todo", { fg = accent, bg = bg_elevated })
+
+        -- treesitter
+        hl(0, "@constant", { fg = accent })
+        hl(0, "@constant.builtin", { fg = accent })
+        hl(0, "@constant.macro", { fg = accent })
+        hl(0, "@label", { fg = accent })
+        hl(0, "@string.escape", { fg = accent })
+        hl(0, "@character.special", { fg = accent })
+        hl(0, "@boolean", { fg = accent })
+        hl(0, "@number", { fg = accent })
+        hl(0, "@number.float", { fg = accent })
+        hl(0, "@type", { fg = accent })
+        hl(0, "@type.builtin", { fg = accent })
+        hl(0, "@type.definition", { fg = accent })
+        hl(0, "@function", { fg = accent })
+        hl(0, "@function.builtin", { fg = accent })
+        hl(0, "@function.macro", { fg = accent })
+        hl(0, "@function.method", { fg = accent })
+        hl(0, "@constructor", { fg = accent })
+        hl(0, "@tag", { fg = accent })
+        hl(0, "@comment.todo", { fg = accent })
+        hl(0, "@markup.heading", { fg = accent })
+        hl(0, "@markup.math", { fg = accent })
+        hl(0, "@markup.link", { fg = accent })
+        hl(0, "@markup.link.label", { fg = accent })
+
+        -- lsp
+        hl(0, "LspSignatureActiveParameter", { fg = accent })
+
+        -- telescope
+        hl(0, "TelescopeTitle", { fg = accent, bg = bg })
+        hl(0, "TelescopePromptTitle", { fg = accent, bg = bg })
+        hl(0, "TelescopePromptPrefix", { fg = accent, bg = bg })
+        hl(0, "TelescopeResultsTitle", { fg = accent, bg = bg })
+        hl(0, "TelescopePreviewTitle", { fg = accent, bg = bg })
+        hl(0, "TelescopeSelectionCaret", { fg = accent, bg = bg_selected })
+        hl(0, "TelescopeMatching", { fg = accent })
+
+        -- blink.cmp
+        hl(0, "BlinkCmpLabelMatch", { fg = accent })
+        hl(0, "BlinkCmpKind", { fg = accent })
+
+        -- oil
+        hl(0, "OilDir", { fg = accent })
+
+        -- flash.nvim
+        hl(0, "FlashLabel", { fg = bg, bg = accent, bold = true })
+        hl(0, "FlashMatch", { fg = accent })
+
+        -- mini.statusline
+        hl(0, "MiniStatuslineModeCommand", { fg = bg, bg = accent })
+        hl(0, "MiniStatuslineModeInsert", { fg = bg, bg = accent })
+        hl(0, "MiniStatuslineModeVisual", { fg = bg, bg = accent })
+
+        -- mini.icons — override directly so linked groups don't pull in orange
+        hl(0, "MiniIconsAzure", { fg = accent })
+        hl(0, "MiniIconsCyan", { fg = accent })
+        hl(0, "MiniIconsBlue", { fg = accent })
+        hl(0, "MiniIconsOrange", { fg = accent })
+        hl(0, "MiniIconsYellow", { fg = accent })
+        hl(0, "MiniIconsPurple", { fg = accent })
+        hl(0, "MiniIconsGreen", { fg = "#99FFE4" })
+        hl(0, "MiniIconsRed", { fg = "#FF8080" })
+        hl(0, "MiniIconsGrey", { fg = "#7E7E7E" })
+
+        -- snacks dashboard
+        hl(0, "SnacksDashboardHeader", { fg = accent })
+        hl(0, "SnacksDashboardIcon", { fg = accent })
+        hl(0, "SnacksDashboardKey", { fg = accent })
+        hl(0, "SnacksDashboardSpecial", { fg = accent })
+        hl(0, "SnacksDashboardFooter", { fg = accent })
+
+        -- snacks explorer/picker sidebar — match editor bg, #282828 borders
+        hl(0, "NormalFloat", { fg = "#FFFFFF", bg = bg })
+        hl(0, "FloatBorder", { fg = border, bg = bg })
+        hl(0, "SnacksPickerListNormalFloat", { bg = bg })
+        hl(0, "SnacksPickerInputNormalFloat", { bg = bg })
+        hl(0, "SnacksPickerBoxNormalFloat", { bg = bg })
+        hl(0, "SnacksPickerNormalFloat", { bg = bg })
+        hl(0, "SnacksPickerListBorder", { fg = border, bg = bg })
+        hl(0, "SnacksPickerInputBorder", { fg = border, bg = bg })
+        hl(0, "SnacksPickerBorder", { fg = border, bg = bg })
+        hl(0, "SnacksPickerBoxBorder", { fg = border, bg = bg })
+        hl(0, "SnacksPickerTitle", { fg = accent, bg = bg })
+        hl(0, "SnacksPickerInputTitle", { fg = accent, bg = bg })
+      end
+
+      -- Apply on ColorScheme event AND after all plugins finish loading
+      vim.api.nvim_create_autocmd("ColorScheme", {
+        pattern = "vesper",
+        callback = apply_overrides,
+      })
+      vim.api.nvim_create_autocmd("VimEnter", {
+        callback = function()
+          vim.schedule(apply_overrides)
+        end,
+      })
+      vim.cmd.colorscheme("vesper")
     end,
   },
 
@@ -567,9 +697,9 @@ Copy the exact contents of `nvim/lua/plugins/ui.lua` from this repository. It co
 **Vesper Lualine Palette:**
 - `bg: #101010`, `bg_elevated: #1A1A1A`, `bg_selected: #232323`
 - `fg: #FFFFFF`, `fg_muted: #A0A0A0`, `fg_dim: #7E7E7E`
-- `comment: #5C5C5C`, `accent: #FFC799`, `mint: #99FFE4`, `error: #FF8080`, `border: #282828`
+- `comment: #5C5C5C`, `accent: #7DC4E4`, `mint: #99FFE4`, `error: #FF8080`, `border: #282828`
 
-**Mode colors:** Normal/Command = accent (`#FFC799`), Insert = mint (`#99FFE4`), Visual = `#aca1cf`, Replace = error (`#FF8080`)
+**Mode colors:** Normal/Command = accent (`#7DC4E4`), Insert = mint (`#99FFE4`), Visual = `#aca1cf`, Replace = error (`#FF8080`)
 
 **Key features:**
 - Uses `LazyVim.config.icons` for diagnostics and `LazyVim.lualine.pretty_path()` for file path
@@ -832,10 +962,12 @@ ln -sf ~/dotfiles/opencode/oh-my-opencode.json ~/.config/opencode/oh-my-opencode
 #### 2. Install the oh-my-opencode plugin
 
 ```bash
-cd ~/.config/opencode && bun install oh-my-opencode
+cd ~/.config/opencode && bun install oh-my-opencode opencode-wakatime
 ```
 
 This creates `node_modules/` and `bun.lock` inside `~/.config/opencode/`. These are local dependencies and should NOT be committed to the dotfiles repo.
+
+**Note:** The `opencode-wakatime` plugin requires a WakaTime configuration file at `~/.wakatime.cfg` with a valid API key. See <https://wakatime.com/> for setup instructions.
 
 #### 3. Verify the config loads correctly
 
@@ -850,17 +982,23 @@ Check that your models, keybindings, and MCP servers appear in the output.
 Copy the exact contents of `opencode/opencode.json` from this repository. Key settings:
 
 - **`$schema`:** `https://opencode.ai/config.json`
-- **`enabled_providers`:** `["openrouter"]` — uses OpenRouter as the model provider
-- **`model`:** `openrouter/anthropic/claude-sonnet-4.6` — default model for conversations
-- **`small_model`:** `openrouter/google/gemini-2.5-flash` — used for lightweight tasks
-- **`plugin`:** `["oh-my-opencode"]` — loads the oh-my-opencode community plugin
+- **`enabled_providers`:** `["opencode"]` — uses OpenCode Zen as the model provider
+- **`model`:** `opencode/minimax-m2.5` — default model for conversations
+- **`small_model`:** `opencode/minimax-m2.5-free` — used for lightweight tasks
+- **`plugin`:** `["oh-my-opencode", "opencode-wakatime"]` — loads community plugins
 - **Agent models:**
-  - `build`: `openrouter/openai/gpt-5.3-codex` (autonomous deep work)
-  - `plan`: `openrouter/anthropic/claude-opus-4.6` (architecture and planning)
-  - `general`: `openrouter/anthropic/claude-sonnet-4.6` (default agent)
-  - `explore`: `openrouter/anthropic/claude-sonnet-4.6` (codebase exploration)
+  - `build`: `opencode/kimi-k2.5` (autonomous deep work)
+  - `plan`: `opencode/kimi-k2.5` (architecture and planning)
+  - `general`: `opencode/glm-4.7` (default agent)
+  - `explore`: `opencode/minimax-m2.5-free` (codebase exploration)
+  - `oracle`: `opencode/kimi-k2.5` (deep knowledge queries)
+  - `librarian`: `opencode/minimax-m2.5-free` (documentation lookup)
+  - `multimodal-looker`: `opencode/minimax-m2.5` (image/visual analysis)
+  - `Metis`: `opencode/kimi-k2.5` (strategic reasoning)
+  - `Momus`: `opencode/glm-4.7` (critical review)
 - **MCP servers:**
   - `apigcp` (Nia): enabled, remote server at `https://apigcp.trynia.ai/mcp`
+  - `linear`: local server via `bunx mcp-remote https://mcp.linear.app/mcp --header "Authorization:Bearer <API_KEY>"`
   - `context7`: disabled
   - `grep_app`: disabled
 
@@ -877,7 +1015,9 @@ Create this file with the following exact contents:
   "keybinds": {
     "session_interrupt": "ctrl+c",
     "input_clear": "ctrl+u",
-    "app_exit": "ctrl+d,<leader>q"
+    "app_exit": "ctrl+d,<leader>q",
+    "session_delete": "ctrl+x",
+    "stash_delete": "ctrl+x"
   }
 }
 ```
@@ -889,6 +1029,8 @@ Create this file with the following exact contents:
 | `session_interrupt` | `ctrl+c` | `escape` | Matches Claude Code behavior. `Escape` is often bound to other actions (e.g., tmux detach via double-escape). `Ctrl+C` is the universal "stop" signal. |
 | `input_clear` | `ctrl+u` | `ctrl+c` | Since `Ctrl+C` now interrupts the AI, input clearing moves to `Ctrl+U` — the standard Unix "kill line" shortcut used in bash/zsh. Consistent muscle memory. |
 | `app_exit` | `ctrl+d,<leader>q` | `ctrl+c,ctrl+d,<leader>q` | Removed `Ctrl+C` from exit to avoid conflicts with the new interrupt binding. `Ctrl+D` (EOF signal) is sufficient for exiting. |
+| `session_delete` | `ctrl+x` | (default) | Delete the current session from the session list. |
+| `stash_delete` | `ctrl+x` | (default) | Delete the selected stash entry. |
 
 **Full list of configurable keybind keys:**
 
@@ -993,7 +1135,7 @@ Run these steps in order after all files are in place:
 
 8. **Install Open Code plugin dependencies:**
    ```bash
-   cd ~/.config/opencode && bun install oh-my-opencode
+   cd ~/.config/opencode && bun install oh-my-opencode opencode-wakatime
    ```
 
 9. **Verify Open Code keybindings work:**

@@ -1,6 +1,6 @@
 # Dotfiles
 
-A dotfiles repository for a macOS development environment. Every tool shares a unified **Vesper** color theme — a warm, minimal dark palette built around a `#101010` background, peach/amber accent `#FFC799`, and muted greys. Tmux acts as the session-management layer; Neovim (via LazyVim) provides the editor; Ghostty is the terminal emulator; Zsh is the shell.
+A dotfiles repository for a macOS development environment. Every tool shares a unified **Vesper** color theme — a warm, minimal dark palette built around a `#101010` background, sky blue accent `#7DC4E4`, and muted greys. Tmux acts as the session-management layer; Neovim (via LazyVim) provides the editor; Ghostty is the terminal emulator; Zsh is the shell.
 
 This document covers every configuration file, keybinding, plugin, color value, and script in the repository. It is detailed enough to recreate the entire setup from scratch.
 
@@ -77,7 +77,7 @@ dotfiles/
 | Principle | Detail |
 |---|---|
 | **Unified color theme** | Vesper is applied consistently across Ghostty (built-in theme), tmux (custom status bar), Neovim (vesper.nvim), and lualine. |
-| **Key palette** | Dark background `#101010`, peach accent `#FFC799`, mint `#99FFE4`, muted text `#A0A0A0`, dim `#5C5C5C`, border `#282828`. |
+| **Key palette** | Dark background `#101010`, sky blue accent `#7DC4E4`, mint `#99FFE4`, muted text `#A0A0A0`, dim `#5C5C5C`, border `#282828`. |
 | **Minimal aesthetic** | No unnecessary chrome, decorations, or visual noise. |
 | **Keyboard-driven** | Every action is reachable via a keybinding. Mouse support is enabled but not required. |
 | **Tmux as session layer** | All terminal multiplexing, session persistence, and project switching flow through tmux. |
@@ -516,20 +516,27 @@ apex, soql, sosl, sflog
 
 LazyVim is also configured to use `vesper` as its colorscheme.
 
-#### Neo-tree Highlight Overrides
+#### Accent & Sidebar Overrides
 
-Custom highlight groups applied after colorscheme load to give the Neo-tree sidebar a seamless Vesper look with a blue accent:
+The Vesper theme's default orange accent (`#FFC799`) is replaced with sky blue (`#7DC4E4`) across all highlight groups. Overrides are wrapped in both a `ColorScheme` autocmd and a `VimEnter` autocmd (with `vim.schedule`) to survive LazyVim's colorscheme re-application and plugin initialization order.
+
+**Key override categories:**
+- **Editor:** Cursor, IncSearch, MatchParen, Directory, Title — all sky blue
+- **Syntax/Treesitter:** Function, Type, Constant, Number, Boolean, Tag, etc. — all sky blue
+- **mini.icons:** All `MiniIcons*` groups overridden directly (prevents orange leak via linked groups like `DiagnosticWarn`)
+- **Snacks Explorer sidebar:** `NormalFloat` and all `SnacksPicker*NormalFloat` set to `#101010` (match editor bg — seamless panel)
+- **Snacks Dashboard:** Header, Icon, Key, Special, Footer — all sky blue
+- **Borders:** `WinSeparator` and all `SnacksPicker*Border` set to `#282828` (matches tmux pane borders)
 
 | Highlight Group | Style |
 |---|---|
-| `NeoTreeNormal` / `NeoTreeNormalNC` | bg `#101010` (match editor) |
-| `NeoTreeEndOfBuffer` | bg + fg `#101010` (hide tildes) |
-| `NeoTreeWinSeparator` | bg `#101010`, fg `#282828` |
-| `NeoTreeCursorLine` | bg `#1A1A1A` |
-| `NeoTreeDirectoryIcon` / `NeoTreeDirectoryName` | fg `#58A6FF` (blue) |
-| `NeoTreeRootName` | fg `#58A6FF`, bold |
-| `NeoTreeTabActive` | fg `#58A6FF`, bold |
-| `NeoTreeTabInactive` | fg `#5C5C5C` |
+| `WinSeparator` | fg `#282828` (matches tmux pane borders) |
+| `NormalFloat` / `SnacksPicker*NormalFloat` | bg `#101010` (matches editor) |
+| `SnacksPicker*Border` | fg `#282828`, bg `#101010` |
+| `SnacksDashboardHeader` | fg `#7DC4E4` |
+| `MiniIcons*` (Azure, Cyan, Blue, Orange, Yellow, Purple) | fg `#7DC4E4` |
+| `MiniIconsGreen` | fg `#99FFE4` |
+| `MiniIconsRed` | fg `#FF8080` |
 
 ### Statusline
 
@@ -548,7 +555,7 @@ Custom **lualine.nvim** theme, styled to match the Vesper palette.
 | `fg_muted` | `#A0A0A0` | Section c text |
 | `fg_dim` | `#7E7E7E` | Dimmed text |
 | `comment` | `#5C5C5C` | Inactive elements |
-| `accent` | `#FFC799` | Normal/command mode, branch icon, noice, lazy updates |
+| `accent` | `#7DC4E4` | Normal/command mode, branch icon, noice, lazy updates |
 | `mint` | `#99FFE4` | Insert mode, diff added |
 | `error` | `#FF8080` | Replace mode, diff removed |
 | `border` | `#282828` | Borders |
@@ -557,11 +564,11 @@ Custom **lualine.nvim** theme, styled to match the Vesper palette.
 
 | Mode | Color | Hex |
 |---|---|---|
-| Normal | Peach accent | `#FFC799` |
+| Normal | Sky blue accent | `#7DC4E4` |
 | Insert | Mint | `#99FFE4` |
 | Visual | Lavender | `#aca1cf` |
 | Replace | Error red | `#FF8080` |
-| Command | Peach accent | `#FFC799` |
+| Command | Sky blue accent | `#7DC4E4` |
 
 #### Section Layout
 
@@ -847,37 +854,45 @@ ln -sf ~/dotfiles/opencode/oh-my-opencode.json ~/.config/opencode/oh-my-opencode
 
 ### Plugin Setup (oh-my-opencode)
 
-After symlinking, install the oh-my-opencode plugin dependency:
+After symlinking, install the plugin dependencies:
 
 ```bash
-cd ~/.config/opencode && bun install oh-my-opencode
+cd ~/.config/opencode && bun install oh-my-opencode opencode-wakatime
 ```
 
 This creates `node_modules/` and `bun.lock` in `~/.config/opencode/` (not tracked in the repo).
 
-### Main Config (`opencode.json`)
+> **Note:** WakaTime requires `~/.wakatime.cfg` with an API key.
+
+**Main Config (`opencode.json`)**
 
 | Setting | Value |
 |---|---|
-| Model | `openrouter/anthropic/claude-sonnet-4.6` |
-| Small model | `openrouter/google/gemini-2.5-flash` |
-| Provider | OpenRouter (`enabled_providers: ["openrouter"]`) |
-| Plugin | `oh-my-opencode` |
+| Model | `opencode/minimax-m2.5` |
+| Small model | `opencode/minimax-m2.5-free` |
+| Provider | OpenCode Zen (`enabled_providers: ["opencode"]`) |
+| Plugins | `oh-my-opencode`, `opencode-wakatime` |
 
 #### Agent Models
 
 | Agent | Model | Use Case |
 |---|---|---|
-| Build | `openrouter/openai/gpt-5.3-codex` | Autonomous deep work, code generation |
-| Plan | `openrouter/anthropic/claude-opus-4.6` | Architecture, planning, complex reasoning |
-| General | `openrouter/anthropic/claude-sonnet-4.6` | Default conversational agent |
-| Explore | `openrouter/anthropic/claude-sonnet-4.6` | Codebase exploration and search |
+| Build | `opencode/kimi-k2.5` | Autonomous deep work, TDD, plan execution |
+| Plan | `opencode/kimi-k2.5` | Architecture, planning, complex reasoning |
+| General | `opencode/glm-4.7` | Default conversational agent, structured coding |
+| Explore | `opencode/minimax-m2.5-free` | Codebase exploration and search |
+| Oracle | `opencode/kimi-k2.5` | Deep research (oh-my-opencode) |
+| Librarian | `opencode/minimax-m2.5-free` | Knowledge indexing (oh-my-opencode) |
+| Multimodal Looker | `opencode/gemini-3-flash` | Image/screenshot analysis (oh-my-opencode) |
+| Metis (Plan Consultant) | `opencode/kimi-k2.5` | Plan consulting (oh-my-opencode) |
+| Momus (Plan Critic) | `opencode/glm-4.7` | Plan critique (oh-my-opencode) |
 
 #### MCP Servers
 
 | Server | Type | Status | Notes |
 |---|---|---|---|
 | `apigcp` (Nia) | Remote | Enabled | Knowledge indexing and search agent |
+| `linear` | Local (via `mcp-remote`) | Enabled | Linear issue tracking, uses Streamable HTTP (`/mcp` endpoint) |
 | `context7` | -- | Disabled | Disabled via oh-my-opencode |
 | `grep_app` | -- | Disabled | Disabled via oh-my-opencode |
 
@@ -892,7 +907,9 @@ This file controls all visual and interaction settings for the terminal UI.
   "keybinds": {
     "session_interrupt": "ctrl+c",
     "input_clear": "ctrl+u",
-    "app_exit": "ctrl+d,<leader>q"
+    "app_exit": "ctrl+d,<leader>q",
+    "session_delete": "ctrl+x",
+    "stash_delete": "ctrl+x"
   }
 }
 ```
@@ -906,6 +923,8 @@ Custom keybindings to match Claude Code's interrupt behavior:
 | `Ctrl+C` | Interrupt AI session | `Escape` | Match Claude Code behavior; Escape is often mapped to other functions (e.g., tmux detach) |
 | `Ctrl+U` | Clear input field | `Ctrl+C` | Standard Unix "kill line" shortcut — consistent with shell muscle memory |
 | `Ctrl+D` / `<leader>q` | Exit application | `Ctrl+C`, `Ctrl+D`, `<leader>q` | Removed `Ctrl+C` from exit so it only interrupts; `Ctrl+D` (EOF) is sufficient for exit |
+| `session_delete` | `ctrl+x` | `ctrl+d` | Default `ctrl+d` conflicts with `app_exit` on the session list page — `ctrl+d` would delete a session instead of quitting. Remapped to `ctrl+x`. |
+| `stash_delete` | `ctrl+x` | `ctrl+d` | Same conflict — remapped to `ctrl+x` for consistency. |
 
 **All available keybind keys** (from Open Code's schema):
 
@@ -1011,7 +1030,7 @@ cd dotfiles
 ### 5. Install Open Code plugin dependencies
 
 ```bash
-cd ~/.config/opencode && bun install oh-my-opencode
+cd ~/.config/opencode && bun install oh-my-opencode opencode-wakatime
 ```
 
 ### 6. Post-install
