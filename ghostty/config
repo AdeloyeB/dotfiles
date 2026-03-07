@@ -1,54 +1,25 @@
-# Ghostty Configuration - Warp Dark Theme
-# ========================================
+# Ghostty Configuration - Vesper Theme (nexxeln/dots)
+# ===================================================
 
-# Warp Dark color scheme (matched from nvim config)
-# Background & Foreground
-background = 000000
-foreground = ffffff
-
-# Cursor
-cursor-color = 00c2ff
-cursor-style = block
-
-# Selection
-selection-background = 1a3a4a
-selection-foreground = ffffff
-
-# ANSI Colors (0-7: normal, 8-15: bright)
-# Normal colors
-palette = 0=#616161
-palette = 1=#ff8272
-palette = 2=#b4fa72
-palette = 3=#fefdc2
-palette = 4=#82aaff
-palette = 5=#ff8ffd
-palette = 6=#d0d1fe
-palette = 7=#f1f1f1
-
-# Bright colors
-palette = 8=#8e8e8e
-palette = 9=#ffc4bd
-palette = 10=#d6fcb9
-palette = 11=#fefdd5
-palette = 12=#82aaff
-palette = 13=#ffb1fe
-palette = 14=#e5e6fe
-palette = 15=#feffff
-
-# Window appearance
+theme = Vesper
+font-family = Hack Nerd Font Mono
+font-size = 18
 window-padding-x = 8
 window-padding-y = 8
-window-decoration = true
+macos-titlebar-style = transparent
+title = " "
+macos-titlebar-proxy-icon = hidden
+cursor-style = block
+cursor-style-blink = false
+shell-integration-features = no-cursor
+mouse-hide-while-typing = true
+keybind = shift+enter=text:\n
+macos-option-as-alt = true
 
-# Font - Hack Nerd Font (same as Warp's default, with icons)
-font-family = Hack Nerd Font Mono
-font-size = 12
-
-# Default window size (columns x rows)
+# Window size
 window-width = 199
 window-height = 56
 
 # Remap Cmd+D / Cmd+Shift+D to tmux splits
-# Sends custom escape sequences that tmux user-keys catch
 keybind = super+d=text:\x1b[77;0u
 keybind = super+shift+d=text:\x1b[77;1u

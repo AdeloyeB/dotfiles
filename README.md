@@ -1,6 +1,6 @@
 # Terminal Config
 
-A dotfiles repository for a macOS development environment. Every tool shares a unified **Warp Dark** color theme built around a pure-black background, sky-blue accents, and gold highlights. Tmux acts as the session-management layer; Neovim (via LazyVim) provides the editor; Ghostty is the terminal emulator; Zsh is the shell.
+A dotfiles repository for a macOS development environment. Every tool shares a unified **Vesper** color theme — a warm, minimal dark palette built around a `#101010` background, peach/amber accent `#FFC799`, and muted greys. Tmux acts as the session-management layer; Neovim (via LazyVim) provides the editor; Ghostty is the terminal emulator; Zsh is the shell.
 
 This document covers every configuration file, keybinding, plugin, color value, and script in the repository. It is detailed enough to recreate the entire setup from scratch.
 
@@ -70,8 +70,8 @@ terminal-config/
 
 | Principle | Detail |
 |---|---|
-| **Unified color theme** | Warp Dark is applied consistently across Ghostty, tmux, Neovim (Catppuccin mocha override), and lualine. |
-| **Key palette** | Black background `#000000`, sky-blue accents `#a5d5fe`, gold highlights `#fefdc2`, muted grey `#616161`. |
+| **Unified color theme** | Vesper is applied consistently across Ghostty (built-in theme), tmux (custom status bar), Neovim (vesper.nvim), and lualine. |
+| **Key palette** | Dark background `#101010`, peach accent `#FFC799`, mint `#99FFE4`, muted text `#A0A0A0`, dim `#5C5C5C`, border `#282828`. |
 | **Minimal aesthetic** | No unnecessary chrome, decorations, or visual noise. |
 | **Keyboard-driven** | Every action is reachable via a keybinding. Mouse support is enabled but not required. |
 | **Tmux as session layer** | All terminal multiplexing, session persistence, and project switching flow through tmux. |
@@ -167,34 +167,14 @@ After running the script, it prints remaining manual steps (font installation, T
 
 **File:** `ghostty/config`
 
-### Color Theme (Warp Dark)
+### Color Theme (Vesper)
 
-| Element | Value |
-|---|---|
-| Background | `#000000` (pure black) |
-| Foreground | `#ffffff` (white) |
-| Cursor color | `#00c2ff` (cyan) |
-| Cursor style | Block |
-| Selection background | `#1a3a4a` |
-| Selection foreground | `#ffffff` |
-
-### ANSI Color Palette
-
-| Index | Normal | Bright |
-|---|---|---|
-| 0 (black/grey) | `#616161` | `#8e8e8e` |
-| 1 (red) | `#ff8272` | `#ffc4bd` |
-| 2 (green) | `#b4fa72` | `#d6fcb9` |
-| 3 (yellow) | `#fefdc2` | `#fefdd5` |
-| 4 (blue) | `#82aaff` | `#82aaff` |
-| 5 (magenta) | `#ff8ffd` | `#ffb1fe` |
-| 6 (cyan) | `#d0d1fe` | `#e5e6fe` |
-| 7 (white) | `#f1f1f1` | `#feffff` |
+Uses Ghostty's built-in `Vesper` theme (`theme = Vesper`). All colors are provided by the theme — no manual palette overrides needed.
 
 ### Font
 
 - **Family:** Hack Nerd Font Mono
-- **Size:** 12pt
+- **Size:** 18pt
 
 ### Window
 
@@ -202,14 +182,19 @@ After running the script, it prints remaining manual steps (font installation, T
 |---|---|
 | Dimensions | 199 columns x 56 rows |
 | Padding | 8px (all sides) |
-| Window decoration | On |
+| Titlebar | Transparent (`macos-titlebar-style = transparent`) |
+| Proxy icon | Hidden |
+| Cursor | Block, no blink |
+| Mouse | Hide while typing |
+| Option key | Alt mode (`macos-option-as-alt = true`) |
 
 ### Keybindings
 
-| Shortcut | Escape Sequence | Tmux Action |
-|---|---|---|
-| `Cmd+D` | `\x1b[77;0u` | Horizontal split |
-| `Cmd+Shift+D` | `\x1b[77;1u` | Vertical split |
+| Shortcut | Action |
+|---|---|
+| `Cmd+D` | tmux horizontal split (via escape sequence) |
+| `Cmd+Shift+D` | tmux vertical split (via escape sequence) |
+| `Shift+Enter` | Send literal newline |
 
 These escape sequences are captured in `tmux.conf` and mapped to the corresponding split-pane commands.
 
@@ -227,9 +212,9 @@ These escape sequences are captured in `tmux.conf` and mapped to the correspondi
 | Base index (windows) | 1 |
 | Base index (panes) | 1 |
 | Renumber windows | On |
-| Allow rename | Off |
+| Allow rename | On |
 | Escape time | 0 (no delay) |
-| Mouse | On (set after TPM to override plugin defaults) |
+| Mouse | On (set before TPM for tmux-yank integration) |
 | Default terminal | `tmux-256color` |
 | Allow passthrough | On (for image protocols like Kitty graphics) |
 
@@ -243,12 +228,12 @@ These escape sequences are captured in `tmux.conf` and mapped to the correspondi
 | Plugin | Purpose | Key Config |
 |---|---|---|
 | `tmux-sensible` | Sensible default settings | -- |
-| `tmux-yank` | Clipboard copy integration | `@yank_selection_mouse = clipboard` |
+| `tmux-yank` | Clipboard copy integration | `@yank_selection_mouse = clipboard`, `@yank_action = copy-pipe-and-cancel` |
 | `tmux-continuum` | Automatic session save and restore | Save interval: 10 minutes; auto-restore on start |
 | `tmux-resurrect` | Persist sessions across tmux server restarts | `@resurrect-strategy-nvim 'session'` (restores vim-obsession sessions) |
 | `tmux-open` | Open files and URLs from tmux copy mode | -- |
 | `tmux-fingers` | Quick text selection and copy (like vimium hints) | -- |
-| `tmux-floax` | Floating pane support | Size: 80% x 80%; border color: `#a5d5fe`; text color: `#e4e4e4`; bind: `Ctrl+F`; popup bg: `#0a0a0a` |
+| `tmux-floax` | Floating pane support | Size: 80% x 80%; border color: `#282828`; text color: `#A0A0A0`; bind: Prefix + `Ctrl+F`; popup bg: `#101010` |
 | `tmux-which-key` | Keybinding help overlay | -- |
 | `tmux-autoreload` | Automatically reloads tmux config on file change | Requires `entr` (`brew install entr`) |
 | `tmux-git-autofetch` | Automatically fetches git changes in background | -- |
@@ -277,7 +262,7 @@ These escape sequences are captured in `tmux.conf` and mapped to the correspondi
 | `J` | Yes (repeatable) | Resize pane down 5px |
 | `K` | Yes (repeatable) | Resize pane up 5px |
 | `L` | Yes (repeatable) | Resize pane right 5px |
-| `Ctrl+F` | No | Toggle floating pane (floax) |
+| `Ctrl+F` | Yes | Toggle floating pane (floax) |
 
 #### Other
 
@@ -288,35 +273,41 @@ These escape sequences are captured in `tmux.conf` and mapped to the correspondi
 | `f` | Yes | Fuzzy pane search via fzf |
 | `Z` | Yes | Zoxide directory picker with eza tree preview |
 
-### Theme (Warp Dark)
+### Theme (Vesper)
 
-The tmux status bar is styled to match the Ghostty and Neovim themes exactly.
+The tmux status bar is styled to match the Vesper palette used in Ghostty and Neovim.
 
 #### Status Bar
 
 | Element | Style |
 |---|---|
-| Status bar background | `#000000` |
-| Status bar foreground | `#ffffff` |
-| Status left (normal) | Sky blue (`#a5d5fe`), shows session name |
-| Status left (prefix active) | Gold (`#fefdc2`), shows session name |
-| Status right | Time (`%H:%M`) and date (`%d-%b`) |
+| Position | Top |
+| Status bar background | `#101010` |
+| Status bar foreground | `#A0A0A0` |
+| Status left | Peach accent (`#FFC799`), bold, shows session name |
+| Status right | 12-hour time (`%-I:%M %p`) |
 
 #### Windows
 
 | Element | Style |
 |---|---|
-| Window status format | ` #I:#W ` (both active and inactive) |
-| Current window | Bold white text on `#1a1a2e` background |
-| Inactive window | Grey (`#616161`) text on black background |
+| Window status format | ` #I #W ` |
+| Current window | Bold white (`#FFFFFF`) |
+| Inactive window | Dim grey (`#5C5C5C`) |
+| Separator | None |
 
 #### Other Elements
 
 | Element | Color |
 |---|---|
-| Pane borders | `#333333` |
-| Messages | Sky blue (`#a5d5fe`) |
-| Clock | Sky blue (`#a5d5fe`) |
+| Pane borders (inactive) | `#282828` |
+| Pane borders (active) | Peach accent (`#FFC799`) |
+| Pane border lines | Simple |
+| Messages | White on `#232323` |
+| Copy mode | White on `#232323` |
+| Clock | Peach accent (`#FFC799`) |
+| Popup background | `#101010` |
+| Popup border | `#282828` |
 
 ---
 
@@ -328,12 +319,13 @@ All scripts live in `tmux/scripts/` and are symlinked or referenced from the tmu
 
 ### dev-mode
 
-**Primary session launcher.** Creates a tmux session named `dev` with a specific multi-pane layout.
+**Primary session launcher.** Creates a tmux session named `dev` with a specific multi-pane layout. Defined as a shell function in `.zshrc`.
 
 | Window | Name | Layout |
 |---|---|---|
-| 1 | AI Orchestrator | 3 panes: left pane occupies 60% width; right side is split vertically into two panes (68 cols, 26 rows). The left pane auto-launches `claude`. |
-| 2 | Deep Code | Single pane |
+| 1 | claude | 3 panes (60/40 split, right side split vertically). All 3 panes auto-launch `claude --dangerously-skip-permissions`. |
+| 2 | opencode | Single pane, auto-launches `opencode` |
+| 3 | code | Single pane, empty shell |
 
 **Reload mode:**
 
@@ -341,11 +333,7 @@ All scripts live in `tmux/scripts/` and are symlinked or referenced from the tmu
 dev-mode reload
 ```
 
-Runs `tmux source-file ~/.tmux.conf` to reload configuration without destroying the session.
-
-**Notes:**
-- Uses `/opt/homebrew/bin/tmux` explicitly (Apple Silicon Homebrew path).
-- Window dimensions: 199 columns x 56 rows.
+Kills the existing session and recreates it with a fresh layout.
 
 ### tmux-command-palette
 
@@ -444,7 +432,8 @@ LazyVim defaults. `Space` is the leader key.
 | Imports | LazyVim core + all files from `lua/plugins/` |
 | Custom plugin lazy loading | Disabled (`lazy = false`) |
 | Versioning | Disabled (`version = false`); always runs latest commits |
-| Install colorscheme fallback | `catppuccin`, then `habamax` |
+| Install colorscheme fallback | `vesper`, then `habamax` |
+| Rocks | Disabled |
 
 **Disabled runtime plugins** (for startup performance):
 
@@ -508,87 +497,64 @@ apex, soql, sosl, sflog
 
 **File:** `lua/plugins/colorscheme.lua`
 
-**Base:** Catppuccin Mocha, extensively overridden to match the Warp Dark theme.
+**Theme:** [Vesper](https://github.com/nexxeln/vesper.nvim) — a warm, minimal dark colorscheme by nexxeln.
 
-#### Color Overrides
+| Setting | Value |
+|---|---|
+| Plugin | `nexxeln/vesper.nvim` |
+| Transparent | `false` |
+| Priority | 1000 (loads first) |
 
-| Catppuccin Token | Hex Value | Description |
-|---|---|---|
-| `base` | `#000000` | Background |
-| `mantle` | `#000000` | Slightly darker background |
-| `crust` | `#000000` | Darkest background |
-| `surface0` | `#1a1a2e` | UI element backgrounds |
-| `surface1` | `#2a2a3e` | Lighter UI surfaces |
-| `surface2` | `#333333` | Borders, separators |
-| `overlay0` | `#616161` | Muted/disabled text |
-| `text` | `#ffffff` | Primary text |
-| `blue` | `#a5d5fe` | Sky blue (unified) |
-| `sky` | `#a5d5fe` | Sky blue (unified) |
-| `sapphire` | `#a5d5fe` | Sky blue (unified) |
-| `lavender` | `#a5d5fe` | Sky blue (unified) |
-| `yellow` | `#fefdc2` | Pale gold |
-| `green` | `#a6e3a1` | Green |
-| `red` | `#f38ba8` | Red |
-| `peach` | `#fab387` | Peach/orange |
-| `mauve` | `#cba6f7` | Purple |
-| `teal` | `#94e2d5` | Teal |
-
-#### Catppuccin Integrations
-
-The following integrations are enabled in the Catppuccin setup:
-
-- `cmp` (completion)
-- `gitsigns`
-- `mason`
-- `mini`
-- `lsp` (native LSP)
-- `notify`
-- `nvimtree` (Neo-tree)
-- `telescope`
-- `treesitter`
-- `which-key`
+LazyVim is also configured to use `vesper` as its colorscheme.
 
 ### Statusline
 
 **File:** `lua/plugins/ui.lua`
 
-Custom **lualine.nvim** theme, styled to match the tmux status bar.
+Custom **lualine.nvim** theme, styled to match the Vesper palette.
 
 #### Lualine Color Palette
 
 | Name | Hex | Usage |
 |---|---|---|
-| `bg` | `#000000` | Status bar background |
-| `fg` | `#ffffff` | Status bar text |
-| `blue` | `#a5d5fe` | Normal mode, accents |
-| `gold` | `#fefdc2` | Command mode |
-| `grey` | `#616161` | Inactive elements |
-| `surface` | `#1a1a2e` | Section backgrounds |
+| `bg` | `#101010` | Status bar background |
+| `bg_elevated` | `#1A1A1A` | Section b backgrounds |
+| `bg_selected` | `#232323` | Selected items |
+| `fg` | `#FFFFFF` | Primary text |
+| `fg_muted` | `#A0A0A0` | Section c text |
+| `fg_dim` | `#7E7E7E` | Dimmed text |
+| `comment` | `#5C5C5C` | Inactive elements |
+| `accent` | `#FFC799` | Normal/command mode, branch icon, noice, lazy updates |
+| `mint` | `#99FFE4` | Insert mode, diff added |
+| `error` | `#FF8080` | Replace mode, diff removed |
+| `border` | `#282828` | Borders |
 
 #### Mode Colors
 
 | Mode | Color | Hex |
 |---|---|---|
-| Normal | Sky blue | `#a5d5fe` |
-| Insert | Green | `#a6e3a1` |
-| Visual | Mauve | `#cba6f7` |
-| Replace | Red | `#f38ba8` |
-| Command | Gold | `#fefdc2` |
+| Normal | Peach accent | `#FFC799` |
+| Insert | Mint | `#99FFE4` |
+| Visual | Lavender | `#aca1cf` |
+| Replace | Error red | `#FF8080` |
+| Command | Peach accent | `#FFC799` |
 
 #### Section Layout
 
 ```
-┌──────┬────────────┬─────────────┬──────┬──────┬──────────────────┐
-│ mode │ git branch │ diagnostics │      │ diff │ progress:location│
-│      │            │             │  ... │      │                  │
-└──────┴────────────┴─────────────┴──────┴──────┴──────────────────┘
-              ↑ filetype and filepath shown in center
+┌──────┬────────────┬─────────────────────┬─────────────────────────────┬──────────────────┐
+│ mode │ git branch │ diagnostics │ type │ │ profiler │ noice cmd │ noice │ diff │ progress:location│
+│      │            │             │ path │ │         │ mode      │ lazy  │      │                  │
+└──────┴────────────┴─────────────────────┴─────────────────────────────┴──────────────────┘
 ```
 
 **Sections:**
-- **Left:** mode | git branch | diagnostics
-- **Center:** filetype, filepath
-- **Right:** diff | progress:location
+- **Left (a):** mode (3-char truncated)
+- **Left (b):** git branch (with  icon, accent colored)
+- **Left (c):** diagnostics, filetype icon, pretty path
+- **Right (x):** snacks profiler, noice command/mode, lazy updates, diff (with gitsigns source)
+- **Right (y):** progress, location (on elevated bg)
+- **Right (z):** empty (tmux shows clock)
 
 **Extensions:** neo-tree, lazy, fzf
 
@@ -712,7 +678,7 @@ Uses `prettier` with `prettier-plugin-apex` (installed globally via npm). Config
 | **LSP** | nvim-lspconfig, mason.nvim, mason-lspconfig.nvim, lazydev.nvim |
 | **Linting/Formatting** | nvim-lint, conform.nvim |
 | **Treesitter** | nvim-treesitter, nvim-treesitter-textobjects, nvim-ts-autotag, ts-comments.nvim |
-| **Colorschemes** | catppuccin, tokyonight.nvim |
+| **Colorschemes** | vesper.nvim, catppuccin, tokyonight.nvim |
 | **UI** | lualine.nvim, bufferline.nvim, noice.nvim, nui.nvim |
 | **Git** | gitsigns.nvim, diffview.nvim |
 | **Search/Navigation** | grug-far.nvim, flash.nvim, todo-comments.nvim |
@@ -781,20 +747,27 @@ zsh-completions, zsh-history-substring-search
 | `Ctrl+M` | Accept line |
 | `Ctrl+X Ctrl+V` | Paste image path |
 
+#### FZF Theme (Vesper)
+
+```
+--color=bg:#101010,bg+:#232323,fg:#A0A0A0,fg+:#FFFFFF,hl:#FFC799,hl+:#FFC799,pointer:#FFC799,prompt:#FFC799,info:#5C5C5C
+```
+
 #### Functions
 
 | Function | Purpose |
 |---|---|
-| `dev-mode()` | Launch the dev-mode tmux session |
+| `dev-mode()` | Launch the dev-mode tmux session (3 windows: claude, opencode, code) |
 | `_dev_mode_create()` | Helper for dev-mode session creation |
-| `clip()` | Clipboard utility |
-| `_clip_inline()` | Helper for inline clipboard operations |
+| `clip()` | Paste clipboard image to file and print path |
+| `_clip_inline()` | Paste clipboard image path inline at cursor |
+| `tmux-git-autofetch()` | Auto-fetch git on directory change (chpwd hook) |
 
 #### Aliases
 
 | Alias | Action |
 |---|---|
-| `lg` | Launch lazygit with tmux integration |
+| `lg` | Launch lazygit in a tmux window (or inline if not in tmux) |
 
 #### Sourced Files
 

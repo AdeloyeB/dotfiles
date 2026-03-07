@@ -1,48 +1,48 @@
 return {
-  -- lualine: styled to merge visually with tmux status bar
+  -- lualine: styled to match Vesper theme
   {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
     opts = function()
       local icons = LazyVim.config.icons
 
-      -- palette matching tmux warp dark theme
+      -- Vesper palette
       local c = {
-        bg = "#000000",
-        fg = "#ffffff",
-        blue = "#a5d5fe",
-        gold = "#fefdc2",
-        grey = "#616161",
-        surface = "#1a1a2e",
-        green = "#a6e3a1",
-        red = "#f38ba8",
-        peach = "#fab387",
-        mauve = "#cba6f7",
+        bg = "#101010",
+        bg_elevated = "#1A1A1A",
+        bg_selected = "#232323",
+        fg = "#FFFFFF",
+        fg_muted = "#A0A0A0",
+        fg_dim = "#7E7E7E",
+        comment = "#5C5C5C",
+        accent = "#FFC799",
+        mint = "#99FFE4",
+        error = "#FF8080",
+        border = "#282828",
       }
 
-      -- flat theme — black bg everywhere, blue accents for active sections
       local theme = {
         normal = {
-          a = { bg = c.blue, fg = c.bg, gui = "bold" },
-          b = { bg = c.surface, fg = c.fg },
-          c = { bg = c.bg, fg = c.grey },
+          a = { bg = c.accent, fg = c.bg, gui = "bold" },
+          b = { bg = c.bg_elevated, fg = c.fg },
+          c = { bg = c.bg, fg = c.fg_muted },
         },
         insert = {
-          a = { bg = c.green, fg = c.bg, gui = "bold" },
+          a = { bg = c.mint, fg = c.bg, gui = "bold" },
         },
         visual = {
-          a = { bg = c.mauve, fg = c.bg, gui = "bold" },
+          a = { bg = "#aca1cf", fg = c.bg, gui = "bold" },
         },
         replace = {
-          a = { bg = c.red, fg = c.bg, gui = "bold" },
+          a = { bg = c.error, fg = c.bg, gui = "bold" },
         },
         command = {
-          a = { bg = c.gold, fg = c.bg, gui = "bold" },
+          a = { bg = c.accent, fg = c.bg, gui = "bold" },
         },
         inactive = {
-          a = { bg = c.bg, fg = c.grey },
-          b = { bg = c.bg, fg = c.grey },
-          c = { bg = c.bg, fg = c.grey },
+          a = { bg = c.bg, fg = c.comment },
+          b = { bg = c.bg, fg = c.comment },
+          c = { bg = c.bg, fg = c.comment },
         },
       }
 
@@ -59,7 +59,7 @@ return {
             { "mode", fmt = function(s) return s:sub(1, 3) end },
           },
           lualine_b = {
-            { "branch", icon = "", color = { fg = c.blue, bg = c.surface } },
+            { "branch", icon = "", color = { fg = c.accent, bg = c.bg_elevated } },
           },
           lualine_c = {
             {
@@ -79,17 +79,17 @@ return {
             {
               function() return require("noice").api.status.command.get() end,
               cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
-              color = { fg = c.blue },
+              color = { fg = c.accent },
             },
             {
               function() return require("noice").api.status.mode.get() end,
               cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
-              color = { fg = c.gold },
+              color = { fg = c.accent },
             },
             {
               require("lazy.status").updates,
               cond = require("lazy.status").has_updates,
-              color = { fg = c.peach },
+              color = { fg = c.accent },
             },
             {
               "diff",
@@ -99,9 +99,9 @@ return {
                 removed = icons.git.removed,
               },
               diff_color = {
-                added = { fg = c.green },
-                modified = { fg = c.blue },
-                removed = { fg = c.red },
+                added = { fg = c.mint },
+                modified = { fg = c.accent },
+                removed = { fg = c.error },
               },
               source = function()
                 local gitsigns = vim.b.gitsigns_status_dict
@@ -116,8 +116,8 @@ return {
             },
           },
           lualine_y = {
-            { "progress", separator = " ", padding = { left = 1, right = 0 }, color = { fg = c.fg, bg = c.surface } },
-            { "location", padding = { left = 0, right = 1 }, color = { fg = c.fg, bg = c.surface } },
+            { "progress", separator = " ", padding = { left = 1, right = 0 }, color = { fg = c.fg, bg = c.bg_elevated } },
+            { "location", padding = { left = 0, right = 1 }, color = { fg = c.fg, bg = c.bg_elevated } },
           },
           -- no clock — tmux already shows one
           lualine_z = {},

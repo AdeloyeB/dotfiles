@@ -139,19 +139,22 @@ bindkey '^]' autosuggest-accept-word            # ctrl+] to accept one word at a
 # fzf — fuzzy history (ctrl+r) and file picker (ctrl+t)
 source <(fzf --zsh)
 
+# fzf — Vesper color palette
+export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --border --color=bg:#101010,bg+:#232323,fg:#A0A0A0,fg+:#FFFFFF,hl:#FFC799,hl+:#FFC799,pointer:#FFC799,prompt:#FFC799,info:#5C5C5C"
+
 # Fix Enter key in tmux+Ghostty (kitty protocol sends extended sequence)
 bindkey '^M' accept-line
 
 # dev-mode: tmux development layout
 # Usage:
 #   dev-mode          → attach to existing session, or create new one
-#   dev-mode reload   → reload ~/.tmux.conf without killing session state
+#   dev-mode reload   → kill session and recreate with fresh layout
 dev-mode() {
   local session="dev"
 
   if [[ "$1" == "reload" ]]; then
-    command tmux source-file ~/.tmux.conf 2>/dev/null
-    echo "tmux config reloaded (session state preserved)"
+    command tmux kill-session -t "$session" 2>/dev/null
+    _dev_mode_create "$session"
     return
   elif command tmux has-session -t "$session" 2>/dev/null; then
     command tmux attach-session -t "$session"
@@ -162,14 +165,23 @@ dev-mode() {
 
 _dev_mode_create() {
   local session="$1"
-  # Window 1: AI Orchestrator (3-pane layout)
-  command tmux new-session -d -s "$session" -n "AI Orchestrator" -x "$(tput cols)" -y "$(tput lines)"
+  local claude_cmd="claude --dangerously-skip-permissions"
+
+  # Window 1: claude (3-pane layout, each running claude)
+  command tmux new-session -d -s "$session" -n "claude" -x "$(tput cols)" -y "$(tput lines)"
   command tmux split-window -h -t "$session" -p 40
   command tmux split-window -v -t "$session"
-  command tmux select-pane -t "$session:.0"
+  command tmux send-keys -t "$session":0.0 "$claude_cmd" C-m
+  command tmux send-keys -t "$session":0.1 "$claude_cmd" C-m
+  command tmux send-keys -t "$session":0.2 "$claude_cmd" C-m
+  command tmux select-pane -t "$session":0.0
 
-  # Window 2: Deep Code
-  command tmux new-window -t "$session" -n "Deep Code"
+  # Window 2: opencode
+  command tmux new-window -t "$session" -n "opencode"
+  command tmux send-keys -t "$session":1 "opencode" C-m
+
+  # Window 3: code
+  command tmux new-window -t "$session" -n "code"
 
   # Focus first window and attach
   command tmux select-window -t "$session":0
@@ -194,3 +206,12 @@ bindkey '^X^V' _clip_inline
 
 # lg — open lazygit in a tmux window (or inline if not in tmux)
 alias lg='if [ -n "$TMUX" ]; then tmux new-window -n "lazygit" "lazygit"; else lazygit; fi'
+
+
+tmux-git-autofetch() {
+
+(/Users/bode/.tmux/plugins/tmux-git-autofetch/git-autofetch.tmux --current &)
+
+}
+add-zsh-hook chpwd tmux-git-autofetch
+    

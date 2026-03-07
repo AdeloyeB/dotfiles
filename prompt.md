@@ -110,71 +110,34 @@ This installs to `/opt/homebrew/opt/openjdk@21`.
 Create the file at `~/Library/Application Support/com.mitchellh.ghostty/config` with the following exact contents:
 
 ```
-background=000000
-foreground=ffffff
+# Ghostty Configuration - Vesper Theme (nexxeln/dots)
+# ===================================================
 
-cursor-color=00c2ff
-cursor-style=block
+theme = Vesper
+font-family = Hack Nerd Font Mono
+font-size = 18
+window-padding-x = 8
+window-padding-y = 8
+macos-titlebar-style = transparent
+title = " "
+macos-titlebar-proxy-icon = hidden
+cursor-style = block
+cursor-style-blink = false
+shell-integration-features = no-cursor
+mouse-hide-while-typing = true
+keybind = shift+enter=text:\n
+macos-option-as-alt = true
 
-selection-background=1a3a4a
-selection-foreground=ffffff
+# Window size
+window-width = 199
+window-height = 56
 
-palette=0=#616161
-palette=1=#ff8272
-palette=2=#b4fa72
-palette=3=#fefdc2
-palette=4=#82aaff
-palette=5=#ff8ffd
-palette=6=#d0d1fe
-palette=7=#f1f1f1
-palette=8=#8e8e8e
-palette=9=#ffc4bd
-palette=10=#d6fcb9
-palette=11=#fefdd5
-palette=12=#82aaff
-palette=13=#ffb1fe
-palette=14=#e5e6fe
-palette=15=#feffff
-
-window-padding-x=8
-window-padding-y=8
-window-decoration=true
-
-font-family=Hack Nerd Font Mono
-font-size=12
-
-window-width=199
-window-height=56
-
-keybind=super+d=text:\x1b[77;0u
-keybind=super+shift+d=text:\x1b[77;1u
+# Remap Cmd+D / Cmd+Shift+D to tmux splits
+keybind = super+d=text:\x1b[77;0u
+keybind = super+shift+d=text:\x1b[77;1u
 ```
 
-### Ghostty Color Reference
-
-| Role              | Hex Code  |
-|-------------------|-----------|
-| Background        | `#000000` |
-| Foreground        | `#ffffff` |
-| Cursor            | `#00c2ff` |
-| Selection BG      | `#1a3a4a` |
-| Selection FG      | `#ffffff` |
-| ANSI Black (0)    | `#616161` |
-| ANSI Red (1)      | `#ff8272` |
-| ANSI Green (2)    | `#b4fa72` |
-| ANSI Yellow (3)   | `#fefdc2` |
-| ANSI Blue (4)     | `#82aaff` |
-| ANSI Magenta (5)  | `#ff8ffd` |
-| ANSI Cyan (6)     | `#d0d1fe` |
-| ANSI White (7)    | `#f1f1f1` |
-| Bright Black (8)  | `#8e8e8e` |
-| Bright Red (9)    | `#ffc4bd` |
-| Bright Green (10) | `#d6fcb9` |
-| Bright Yellow (11)| `#fefdd5` |
-| Bright Blue (12)  | `#82aaff` |
-| Bright Magenta(13)| `#ffb1fe` |
-| Bright Cyan (14)  | `#e5e6fe` |
-| Bright White (15) | `#feffff` |
+**Important:** The `theme = Vesper` line uses Ghostty's built-in Vesper theme. All ANSI colors, background, foreground, cursor, and selection colors are provided by the theme — no manual palette overrides needed.
 
 ---
 
@@ -195,66 +158,21 @@ export PATH="$PATH:/Users/bode/.foundry/bin"
 
 ### 3.3 `~/.zshrc`
 
-```zsh
-export ZSH=$HOME/.oh-my-zsh
+Copy the exact contents of `zsh/zshrc` from this repository. Key sections:
 
-ZSH_THEME="robbyrussell"
-
-plugins=(git docker fzf command-not-found colored-man-pages z copypath aliases web-search npm bun tmux ssh-agent sudo zsh-syntax-highlighting zsh-autosuggestions zsh-completions zsh-history-substring-search)
-
-source $ZSH/oh-my-zsh.sh
-
-# Environment variables
-export BUN_INSTALL=$HOME/.bun
-export JAVA_HOME=/opt/homebrew/opt/openjdk@21
-export PATH="$HOME/.codeium/windsurf/bin:$BUN_INSTALL/bin:$HOME/.local/bin:$JAVA_HOME/bin:$PATH"
-
-# Autosuggestions configuration
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#666666"
-ZSH_AUTOSUGGEST_STRATEGY=(history completion)
-ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
-
-# Keybindings for autosuggestions
-bindkey '→' autosuggest-accept
-bindkey '^]' autosuggest-accept-word
-
-# FZF shell integration
-source <(fzf --zsh)
-
-# Accept line binding
-bindkey '^M' accept-line
-
-# dev-mode function: launches or attaches to the tmux dev session
-dev-mode() {
-  if [[ "$1" == "reload" ]]; then
-    ~/.local/bin/dev-mode reload
-    return
-  fi
-  ~/.local/bin/dev-mode
-}
-
-# _dev_mode_create function
-_dev_mode_create() {
-  ~/.local/bin/dev-mode
-}
-
-# clip function: copies an image from clipboard
-clip() {
-  local filename="${1:-clipboard_image.png}"
-  pngpaste "$filename" && echo "Saved clipboard image to $filename"
-}
-
-# _clip_inline widget bound to Ctrl+X Ctrl+V
-_clip_inline() {
-  local tmpfile=$(mktemp /tmp/clip_XXXXXX.png)
-  pngpaste "$tmpfile" 2>/dev/null && LBUFFER+="$tmpfile"
-}
-zle -N _clip_inline
-bindkey '^X^V' _clip_inline
-
-# Lazygit in tmux alias
-alias lg='~/.local/bin/lgt'
-```
+- **oh-my-zsh** with `robbyrussell` theme and 18 plugins (git, docker, fzf, command-not-found, colored-man-pages, z, copypath, aliases, web-search, npm, bun, tmux, ssh-agent, sudo, zsh-syntax-highlighting, zsh-autosuggestions, zsh-completions, zsh-history-substring-search)
+- **Environment:** `BUN_INSTALL`, `JAVA_HOME`, PATH additions for windsurf, bun, local bin, java
+- **Autosuggestions:** ghost text `#666666`, strategy `(history completion)`, buffer max 20
+- **FZF Vesper colors:** `--color=bg:#101010,bg+:#232323,fg:#A0A0A0,fg+:#FFFFFF,hl:#FFC799,hl+:#FFC799,pointer:#FFC799,prompt:#FFC799,info:#5C5C5C`
+- **dev-mode():** Shell function (not a script) that creates a tmux `dev` session with 3 windows:
+  - Window 1 "claude": 3-pane layout (60/40 split, right split vertically), all panes run `claude --dangerously-skip-permissions`
+  - Window 2 "opencode": single pane, auto-runs `opencode`
+  - Window 3 "code": empty shell
+  - `dev-mode reload` kills and recreates the session
+- **clip():** Paste clipboard image to `/tmp/clip-<timestamp>.png`
+- **_clip_inline():** ZLE widget bound to `Ctrl+X Ctrl+V`, pastes image path at cursor
+- **lg alias:** Opens lazygit in tmux window or inline
+- **tmux-git-autofetch():** chpwd hook for auto git fetch
 
 ---
 
@@ -262,107 +180,48 @@ alias lg='~/.local/bin/lgt'
 
 ### 4.1 `~/.tmux.conf`
 
-```tmux
-# --- Prefix ---
-unbind C-b
-set -g prefix C-a
-bind C-a send-prefix
+Copy the exact contents of `tmux/tmux.conf` from this repository. Key settings:
 
-# --- General settings ---
-set -g base-index 1
-setw -g pane-base-index 1
-set -g renumber-windows on
-setw -g allow-rename off
-set -s escape-time 0
-set -g allow-passthrough on
-set -g default-terminal "tmux-256color"
-set -sa terminal-overrides ",xterm-256color:RGB"
-set -sa terminal-overrides ",xterm-ghostty:RGB"
-set -sa terminal-features ",xterm-ghostty:clipboard:ccolour:cstyle:focus:title:mouse"
+- **Prefix:** `Ctrl+A` (unbinds `Ctrl+B`)
+- **General:** base-index 1, renumber-windows on, allow-rename on, escape-time 0
+- **Plugins (TPM):** tpm, tmux-sensible, tmux-yank, tmux-resurrect, tmux-continuum, tmux-open, tmux-fingers, tmux-floax, tmux-which-key, tmux-autoreload, tmux-git-autofetch
+- **Mouse & Clipboard:** `set -g mouse on` BEFORE TPM, `@yank_selection_mouse 'clipboard'`, `@yank_action 'copy-pipe-and-cancel'`
+- **Floax:** 80% x 80%, bind `C-f` (with prefix), border `#282828`, text `#A0A0A0`
+- **Popup:** bg `#101010`, border `#282828`
+- **Continuum:** auto-restore on, save interval 10m, resurrect nvim session strategy
+- **Terminal:** `tmux-256color`, RGB overrides for xterm-256color and xterm-ghostty, allow-passthrough on
 
-# --- Plugins ---
-set -g @plugin 'tmux-plugins/tpm'
-set -g @plugin 'tmux-plugins/tmux-sensible'
-set -g @plugin 'tmux-plugins/tmux-yank'
-set -g @plugin 'tmux-plugins/tmux-resurrect'
-set -g @plugin 'tmux-plugins/tmux-continuum'
-set -g @plugin 'tmux-plugins/tmux-open'
-set -g @plugin 'Morantron/tmux-fingers'
-set -g @plugin 'omerxx/tmux-floax'
-set -g @plugin 'alexwforsythe/tmux-which-key'
-set -g @plugin 'b0o/tmux-autoreload'
-set -g @plugin 'thepante/tmux-git-autofetch'
+**Vesper Theme:**
 
-# --- Plugin settings ---
-set -g @yank_selection_mouse 'clipboard'
-set -g @floax-width '80%'
-set -g @floax-height '80%'
-set -g @floax-bind '-n C-f'
-set -g @floax-border-color '#a5d5fe'
-set -g @floax-text-color '#e4e4e4'
-set -g @continuum-restore 'on'
-set -g @continuum-save-interval '10'
-set -g @resurrect-strategy-nvim 'session'
+| Element | Value |
+|---|---|
+| Status position | Top |
+| Status bg | `#101010` |
+| Status fg | `#A0A0A0` |
+| Status left | `#[fg=#FFC799,bold] #S #[fg=#5C5C5C]│ ` |
+| Status right | `#[fg=#A0A0A0]%-I:%M %p ` |
+| Current window | `#[fg=#FFFFFF,bold] #I #W ` |
+| Inactive window | `#[fg=#5C5C5C] #I #W ` |
+| Pane borders | Simple lines, `#282828` inactive, `#FFC799` active |
+| Messages | White on `#232323` |
+| Copy mode | White on `#232323` |
+| Clock | `#FFC799` |
 
-# --- Popup style (subtle dark background for floating panes) ---
-set -g popup-style 'bg=#0a0a0a'
-set -g popup-border-style 'fg=#a5d5fe'
+**Keybindings:**
 
-# --- Window keybindings ---
-bind c new-window
-bind -n S-Left previous-window
-bind -n S-Right next-window
-
-# --- Pane splitting ---
-bind | split-window -h -c "#{pane_current_path}"
-bind - split-window -v -c "#{pane_current_path}"
-
-# --- Pane navigation ---
-bind -n M-Left select-pane -L
-bind -n M-Right select-pane -R
-bind -n M-Up select-pane -U
-bind -n M-Down select-pane -D
-
-# --- Pane resizing ---
-bind -r H resize-pane -L 5
-bind -r J resize-pane -D 5
-bind -r K resize-pane -U 5
-bind -r L resize-pane -R 5
-
-# --- Escape to detach (double-tap) ---
-bind -n Escape switch-client -T escape_pressed
-bind -T escape_pressed Escape detach-client
-
-# --- Utility keybindings ---
-bind g new-window -n "lazygit" "lazygit"
-bind f run-shell "tmux list-panes -a -F '#{session_name}:#{window_index}.#{pane_index} #{pane_current_command} #{pane_current_path}' | fzf-tmux -p 80%,60% --reverse | cut -d' ' -f1 | xargs tmux switch-client -t"
-bind Z run-shell "zoxide query -l | fzf-tmux -p 80%,60% --reverse --preview 'eza -la --color=always --icons {}' | xargs -I{} tmux new-window -c '{}'"
-
-# --- Theme / Status Bar ---
-set -g status-style "bg=#000000,fg=#ffffff"
-set -g status-left-style "bg=#000000,bold"
-set -g status-right-style "bg=#000000,fg=#ffffff"
-set -g status-left "#{?client_prefix,#[fg=#fefdc2],#[fg=#a5d5fe]} #S "
-set -g status-right "%H:%M  %d-%b"
-set -g status-left-length 20
-set -g status-right-length 40
-
-setw -g window-status-style "bg=#000000,fg=#616161"
-setw -g window-status-current-style "bg=#1a1a2e,fg=#ffffff,bold"
-setw -g window-status-format " #I:#W "
-setw -g window-status-current-format " #I:#W "
-
-set -g pane-border-style "fg=#333333"
-set -g pane-active-border-style "fg=#333333"
-set -g message-style "bg=#000000,fg=#a5d5fe"
-set -g clock-mode-colour "#a5d5fe"
-
-# --- Initialize TPM (MUST be the last plugin line) ---
-run '~/.tmux/plugins/tpm/tpm'
-
-# --- Post-TPM overrides (these MUST come after TPM init) ---
-set -g mouse on
-```
+| Binding | Prefix | Action |
+|---|---|---|
+| `c` | Yes | New window |
+| `Shift+Left/Right` | No | Previous/next window |
+| `\|` | Yes | Split horizontal (keeps path) |
+| `-` | Yes | Split vertical (keeps path) |
+| `Alt+Arrows` | No | Navigate panes |
+| `H/J/K/L` | Yes (repeat) | Resize panes 5px |
+| `Escape Escape` | No | Detach |
+| `g` | Yes | Lazygit window |
+| `f` | Yes | FZF pane search |
+| `Z` | Yes | Zoxide directory picker |
+| `Ctrl+F` | Yes | Toggle floax |
 
 ### 4.2 tmux Helper Scripts
 
@@ -374,41 +233,19 @@ mkdir -p ~/.local/bin
 
 All scripts below go in `~/.local/bin/` and must be made executable with `chmod +x`.
 
-#### `~/.local/bin/dev-mode`
+#### `dev-mode` (shell function in `.zshrc`)
 
-```bash
-#!/usr/bin/env bash
+**Note:** `dev-mode` is now a shell function defined directly in `.zshrc`, not a separate script in `~/.local/bin/`. The `~/.local/bin/dev-mode` script is no longer used.
 
-SESSION="dev"
-TMUX_BIN="/opt/homebrew/bin/tmux"
+The function creates a tmux `dev` session with 3 windows:
 
-# Handle reload argument
-if [[ "$1" == "reload" ]]; then
-  $TMUX_BIN source-file ~/.tmux.conf
-  echo "tmux config reloaded."
-  exit 0
-fi
+| Window | Name | Layout | Auto-run |
+|---|---|---|---|
+| 1 | claude | 3 panes (60/40 split, right split vertically) | `claude --dangerously-skip-permissions` in all 3 panes |
+| 2 | opencode | Single pane | `opencode` |
+| 3 | code | Single pane | (none) |
 
-# If session already exists, attach to it
-if $TMUX_BIN has-session -t "$SESSION" 2>/dev/null; then
-  $TMUX_BIN attach-session -t "$SESSION"
-  exit 0
-fi
-
-# Create new session with Window 1: AI Orchestrator
-$TMUX_BIN new-session -d -s "$SESSION" -n "AI Orchestrator" -x 199 -y 56
-$TMUX_BIN split-window -h -l 68 -t "$SESSION"
-$TMUX_BIN split-window -v -l 26 -t "$SESSION"
-$TMUX_BIN send-keys -t "${SESSION}:1.1" 'claude' Enter
-$TMUX_BIN select-pane -t "${SESSION}:1.1"
-
-# Create Window 2: Deep Code
-$TMUX_BIN new-window -t "$SESSION" -n "Deep Code"
-
-# Select Window 1 and attach
-$TMUX_BIN select-window -t "${SESSION}:1"
-$TMUX_BIN attach-session -t "$SESSION"
-```
+`dev-mode reload` kills the session and recreates it fresh.
 
 #### `~/.local/bin/tmux-command-palette`
 
@@ -512,48 +349,12 @@ require("config.lazy")
 
 ### 5.3 `~/.config/nvim/lua/config/lazy.lua`
 
-```lua
--- Bootstrap lazy.nvim
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-  if vim.v.shell_error ~= 0 then
-    vim.api.nvim_echo({
-      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out, "WarningMsg" },
-      { "\nPress any key to exit..." },
-    }, true, {})
-    vim.fn.getchar()
-    os.exit(1)
-  end
-end
-vim.opt.rtp:prepend(lazypath)
+Copy the exact contents of `nvim/lua/config/lazy.lua` from this repository. Key differences from default LazyVim:
 
-require("lazy").setup({
-  spec = {
-    { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-    { import = "plugins" },
-  },
-  defaults = {
-    lazy = false,
-    version = false,
-  },
-  install = { colorscheme = { "catppuccin", "habamax" } },
-  checker = { enabled = true, notify = false },
-  performance = {
-    rtp = {
-      disabled_plugins = {
-        "gzip",
-        "tarPlugin",
-        "tohtml",
-        "tutor",
-        "zipPlugin",
-      },
-    },
-  },
-})
-```
+- `rocks = { enabled = false }` — disables luarocks support
+- `install = { colorscheme = { "vesper", "habamax" } }` — uses vesper as install fallback
+- `checker = { enabled = true, notify = false }` — silent update checks
+- Disabled runtime plugins: gzip, tarPlugin, tohtml, tutor, zipPlugin
 
 ### 5.4 `~/.config/nvim/lua/config/options.lua`
 
@@ -722,46 +523,24 @@ return {
 
 ```lua
 return {
+  -- vesper — nexxeln's dark minimal colorscheme
   {
-    "catppuccin/nvim",
-    name = "catppuccin",
+    "nexxeln/vesper.nvim",
+    lazy = false,
     priority = 1000,
+    config = function()
+      require("vesper").setup({
+        transparent = false,
+      })
+      vim.cmd.colorscheme("vesper")
+    end,
+  },
+
+  -- tell LazyVim to use it
+  {
+    "LazyVim/LazyVim",
     opts = {
-      flavour = "mocha",
-      color_overrides = {
-        mocha = {
-          base = "#000000",
-          mantle = "#000000",
-          crust = "#000000",
-          surface0 = "#1a1a2e",
-          surface1 = "#2a2a3e",
-          surface2 = "#333333",
-          overlay0 = "#616161",
-          text = "#ffffff",
-          blue = "#a5d5fe",
-          sky = "#a5d5fe",
-          sapphire = "#a5d5fe",
-          lavender = "#a5d5fe",
-          yellow = "#fefdc2",
-          green = "#a6e3a1",
-          red = "#f38ba8",
-          peach = "#fab387",
-          mauve = "#cba6f7",
-          teal = "#94e2d5",
-        },
-      },
-      integrations = {
-        cmp = true,
-        gitsigns = true,
-        mason = true,
-        mini = true,
-        native_lsp = { enabled = true },
-        notify = true,
-        nvimtree = true,
-        telescope = true,
-        treesitter = true,
-        which_key = true,
-      },
+      colorscheme = "vesper",
     },
   },
 }
@@ -769,77 +548,22 @@ return {
 
 ### 5.9 `~/.config/nvim/lua/plugins/ui.lua`
 
-```lua
-return {
-  {
-    "nvim-lualine/lualine.nvim",
-    opts = function()
-      local colors = {
-        bg = "#000000",
-        fg = "#ffffff",
-        blue = "#a5d5fe",
-        gold = "#fefdc2",
-        grey = "#616161",
-        surface = "#1a1a2e",
-        green = "#a6e3a1",
-        red = "#f38ba8",
-        peach = "#fab387",
-        mauve = "#cba6f7",
-      }
+Copy the exact contents of `nvim/lua/plugins/ui.lua` from this repository. It contains a fully custom lualine theme using the Vesper palette:
 
-      local custom_theme = {
-        normal = {
-          a = { bg = colors.blue, fg = colors.bg, gui = "bold" },
-          b = { bg = colors.surface, fg = colors.fg },
-          c = { bg = colors.bg, fg = colors.fg },
-        },
-        insert = {
-          a = { bg = colors.green, fg = colors.bg, gui = "bold" },
-          b = { bg = colors.surface, fg = colors.fg },
-          c = { bg = colors.bg, fg = colors.fg },
-        },
-        visual = {
-          a = { bg = colors.mauve, fg = colors.bg, gui = "bold" },
-          b = { bg = colors.surface, fg = colors.fg },
-          c = { bg = colors.bg, fg = colors.fg },
-        },
-        replace = {
-          a = { bg = colors.red, fg = colors.bg, gui = "bold" },
-          b = { bg = colors.surface, fg = colors.fg },
-          c = { bg = colors.bg, fg = colors.fg },
-        },
-        command = {
-          a = { bg = colors.gold, fg = colors.bg, gui = "bold" },
-          b = { bg = colors.surface, fg = colors.fg },
-          c = { bg = colors.bg, fg = colors.fg },
-        },
-        inactive = {
-          a = { bg = colors.bg, fg = colors.grey },
-          b = { bg = colors.bg, fg = colors.grey },
-          c = { bg = colors.bg, fg = colors.grey },
-        },
-      }
+**Vesper Lualine Palette:**
+- `bg: #101010`, `bg_elevated: #1A1A1A`, `bg_selected: #232323`
+- `fg: #FFFFFF`, `fg_muted: #A0A0A0`, `fg_dim: #7E7E7E`
+- `comment: #5C5C5C`, `accent: #FFC799`, `mint: #99FFE4`, `error: #FF8080`, `border: #282828`
 
-      return {
-        options = {
-          theme = custom_theme,
-          component_separators = "",
-          section_separators = "",
-        },
-        sections = {
-          lualine_a = { { "mode", fmt = function(str) return str:sub(1, 3) end } },
-          lualine_b = { "branch" },
-          lualine_c = { "diagnostics", "filetype", "filename" },
-          lualine_x = { "diff", "profiler", "noice" },
-          lualine_y = { "progress", "location" },
-          lualine_z = {},
-        },
-        extensions = { "neo-tree", "lazy", "fzf" },
-      }
-    end,
-  },
-}
-```
+**Mode colors:** Normal/Command = accent (`#FFC799`), Insert = mint (`#99FFE4`), Visual = `#aca1cf`, Replace = error (`#FF8080`)
+
+**Key features:**
+- Uses `LazyVim.config.icons` for diagnostics and `LazyVim.lualine.pretty_path()` for file path
+- Git branch with  icon in accent color
+- Snacks profiler, noice command/mode, lazy updates in section x
+- Diff with gitsigns source (mint=added, accent=modified, error=removed)
+- No section z (tmux shows clock)
+- Global statusline, no separators, disabled on dashboard filetypes
 
 ### 5.9b `~/.config/nvim/lua/plugins/salesforce.lua`
 
@@ -1077,32 +801,25 @@ Create `~/.gitconfig` with the following template. Replace `{{NAME}}` and `{{EMA
 
 ---
 
-## 7. Unified Color Palette Reference
+## 7. Unified Color Palette Reference (Vesper)
 
-This is the single source of truth for the color theme used across Ghostty, tmux, Neovim, and FZF. The theme is derived from **Warp Dark**.
+This is the single source of truth for the color theme used across Ghostty, tmux, Neovim, FZF, and lualine. The theme is **Vesper** by nexxeln.
 
 | Name / Role            | Hex Code  | Where Used                                      |
 |------------------------|-----------|------------------------------------------------|
-| Background             | `#000000` | Ghostty bg, tmux status bg, nvim base/mantle/crust, lualine bg |
-| Foreground / Text      | `#ffffff` | Ghostty fg, tmux fg, nvim text, lualine fg      |
-| Primary accent (sky)   | `#a5d5fe` | tmux active prefix, floax border, nvim blue/sky/sapphire/lavender, lualine normal mode, message fg, clock |
-| Secondary accent (gold)| `#fefdc2` | tmux prefix indicator, nvim yellow, lualine command mode, ANSI yellow |
-| Muted / inactive       | `#616161` | tmux inactive windows, nvim overlay0, lualine inactive, ANSI black, FZF border |
-| Surface (subtle bg)    | `#1a1a2e` | tmux current window bg, nvim surface0, lualine section b, FZF bg |
-| Lighter surface        | `#2a2a3e` | nvim surface1                                   |
-| Borders                | `#333333` | tmux pane borders, nvim surface2                 |
-| Cursor                 | `#00c2ff` | Ghostty cursor, FZF highlight                   |
-| Selection bg           | `#1a3a4a` | Ghostty selection, FZF bg                        |
-| Error / red            | `#f38ba8` | nvim red, lualine replace mode                   |
-| Success / green        | `#a6e3a1` | nvim green, lualine insert mode                  |
-| Warning / peach        | `#fab387` | nvim peach                                       |
-| Purple / mauve         | `#cba6f7` | nvim mauve, lualine visual mode                  |
-| Teal                   | `#94e2d5` | nvim teal                                        |
-| ANSI Blue              | `#82aaff` | Ghostty palette 4 and 12                         |
-| ANSI Magenta           | `#ff8ffd` | Ghostty palette 5                                |
-| ANSI Red               | `#ff8272` | Ghostty palette 1                                |
-| ANSI Green             | `#b4fa72` | Ghostty palette 2                                |
-| ANSI Cyan              | `#d0d1fe` | Ghostty palette 6                                |
+| Background             | `#101010` | Ghostty (Vesper theme), tmux status bg, nvim bg, lualine bg, FZF bg, popup bg |
+| Background elevated    | `#1A1A1A` | lualine section b                               |
+| Background selected    | `#232323` | FZF bg+, tmux copy/message bg, lualine bg_selected |
+| Foreground / Text      | `#FFFFFF` | Ghostty fg, tmux current window, nvim text, lualine fg, FZF fg+ |
+| Muted text             | `#A0A0A0` | tmux status fg, floax text, lualine section c, FZF fg |
+| Dim text               | `#7E7E7E` | lualine dim                                      |
+| Comment / inactive     | `#5C5C5C` | tmux inactive windows, tmux separator, lualine inactive, FZF info |
+| Primary accent (peach) | `#FFC799` | tmux session name, tmux active border, tmux clock, lualine normal/command mode, lualine branch icon, FZF highlight/pointer/prompt |
+| Mint                   | `#99FFE4` | lualine insert mode, diff added                  |
+| Visual / lavender      | `#aca1cf` | lualine visual mode                              |
+| Error / red            | `#FF8080` | lualine replace mode, diff removed               |
+| Border                 | `#282828` | tmux pane borders, floax border, popup border    |
+| ANSI palette           | (various) | Provided by Ghostty's built-in Vesper theme      |
 
 ---
 
@@ -1164,7 +881,7 @@ Run these steps in order after all files are in place:
 | `~/.config/nvim/lua/config/keymaps.lua` | Neovim keymaps (LazyVim defaults) |
 | `~/.config/nvim/lua/config/autocmds.lua` | Neovim autocommands (LazyVim defaults) |
 | `~/.config/nvim/lua/plugins/editor.lua` | Language extras, Treesitter, Mason, LSP |
-| `~/.config/nvim/lua/plugins/colorscheme.lua` | Catppuccin Mocha with custom overrides |
+| `~/.config/nvim/lua/plugins/colorscheme.lua` | Vesper colorscheme (nexxeln/vesper.nvim) |
 | `~/.config/nvim/lua/plugins/ui.lua` | Lualine status line |
 | `~/.config/nvim/lua/plugins/image.lua` | image.nvim (disabled) |
 | `~/.config/nvim/stylua.toml` | Lua formatter config |
