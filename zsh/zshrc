@@ -183,6 +183,10 @@ _dev_mode_create() {
   # Window 3: code
   command tmux new-window -t "$session" -n "code"
 
+  # Window 4: github (gh-dash TUI)
+  command tmux new-window -t "$session" -n "github"
+  command tmux send-keys -t "$session":4 "gh dash" C-m
+
   # Ensure tmux config + TPM plugins are loaded
   command tmux source-file ~/.tmux.conf
 

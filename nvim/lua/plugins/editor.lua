@@ -7,6 +7,11 @@ return {
   { import = "lazyvim.plugins.extras.lang.tailwind" },
   { import = "lazyvim.plugins.extras.lang.java" },
   { import = "lazyvim.plugins.extras.lang.dotnet" },
+  { import = "lazyvim.plugins.extras.lang.docker" },
+  { import = "lazyvim.plugins.extras.lang.terraform" },
+  { import = "lazyvim.plugins.extras.lang.yaml" },
+  { import = "lazyvim.plugins.extras.lang.sql" },
+  { import = "lazyvim.plugins.extras.lang.markdown" },
 
   -- treesitter parsers
   {
@@ -32,6 +37,10 @@ return {
         "java",
         "kotlin",
         "xml",
+        "dockerfile",
+        "hcl",
+        "terraform",
+        "sql",
         "apex",
         "soql",
         "sosl",

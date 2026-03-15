@@ -18,6 +18,16 @@ vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
   end,
 })
 
+-- Auto-refresh neo-tree when switching back from another tmux pane (e.g. Claude Code)
+vim.api.nvim_create_autocmd("FocusGained", {
+  group = vim.api.nvim_create_augroup("neotree_auto_refresh", { clear = true }),
+  callback = function()
+    if package.loaded["neo-tree.sources.manager"] then
+      require("neo-tree.sources.manager").refresh("filesystem")
+    end
+  end,
+})
+
 -- Auto-start vim-obsession if no session is already being tracked
 vim.api.nvim_create_autocmd("VimEnter", {
   group = vim.api.nvim_create_augroup("auto_obsession", { clear = true }),

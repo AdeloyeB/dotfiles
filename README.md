@@ -104,6 +104,13 @@ dotfiles/
 | `eza` | Modern `ls` replacement |
 | `imagemagick` | Image processing |
 | `opencode` | Terminal AI coding agent |
+| `gh` | GitHub CLI |
+
+### GitHub CLI Extensions
+
+| Extension | Purpose |
+|---|---|
+| `dlvhdr/gh-dash` | GitHub dashboard TUI (PRs, issues, notifications) |
 
 ### Other Dependencies
 
@@ -335,6 +342,7 @@ All scripts live in `tmux/scripts/` and are symlinked or referenced from the tmu
 | 1 | claude | 3 panes (60/40 split, right side split vertically). All 3 panes auto-launch `claude --dangerously-skip-permissions`. |
 | 2 | opencode | Single pane, auto-launches `opencode` |
 | 3 | code | Single pane, empty shell |
+| 4 | github | Single pane, auto-launches `gh dash` (GitHub dashboard TUI) |
 
 **Reload mode:**
 
@@ -788,7 +796,7 @@ zsh-completions, zsh-history-substring-search
 
 | Function | Purpose |
 |---|---|
-| `dev-mode()` | Launch the dev-mode tmux session "sandbox" (3 windows: claude, opencode, code) |
+| `dev-mode()` | Launch the dev-mode tmux session "sandbox" (4 windows: claude, opencode, code, github) |
 | `_dev_mode_create()` | Helper for dev-mode session creation |
 | `clip()` | Paste clipboard image to file and print path |
 | `_clip_inline()` | Paste clipboard image path inline at cursor |

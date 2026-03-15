@@ -162,10 +162,11 @@ Copy the exact contents of `zsh/zshrc` from this repository. Key sections:
 - **Environment:** `BUN_INSTALL`, `JAVA_HOME`, PATH additions for windsurf, bun, local bin, java
 - **Autosuggestions:** ghost text `#666666`, strategy `(history completion)`, buffer max 20
 - **FZF Vesper colors:** `--color=bg:#101010,bg+:#232323,fg:#A0A0A0,fg+:#FFFFFF,hl:#FFC799,hl+:#FFC799,pointer:#FFC799,prompt:#FFC799,info:#5C5C5C`
-- **dev-mode():** Shell function (not a script) that creates a tmux `sandbox` session with 3 windows:
+- **dev-mode():** Shell function (not a script) that creates a tmux `sandbox` session with 4 windows:
   - Window 1 "claude": 3-pane layout (60/40 split, right split vertically), all panes run `claude --dangerously-skip-permissions`
   - Window 2 "opencode": single pane, auto-runs `opencode`
   - Window 3 "code": empty shell
+  - Window 4 "github": single pane, auto-runs `gh dash` (GitHub dashboard TUI)
   - After creating windows, sources `~/.tmux.conf` to ensure TPM plugins are loaded
   - `dev-mode reload` kills and recreates the session
 - **clip():** Paste clipboard image to `/tmp/clip-<timestamp>.png`
@@ -238,13 +239,14 @@ All scripts below go in `~/.local/bin/` and must be made executable with `chmod 
 
 **Note:** `dev-mode` is now a shell function defined directly in `.zshrc`, not a separate script in `~/.local/bin/`. The `~/.local/bin/dev-mode` script is no longer used.
 
-The function creates a tmux `sandbox` session with 3 windows:
+The function creates a tmux `sandbox` session with 4 windows:
 
 | Window | Name | Layout | Auto-run |
 |---|---|---|---|
 | 1 | claude | 3 panes (60/40 split, right split vertically) | `claude --dangerously-skip-permissions` in all 3 panes |
 | 2 | opencode | Single pane | `opencode` |
 | 3 | code | Single pane | (none) |
+| 4 | github | Single pane | `gh dash` (GitHub dashboard TUI) |
 
 `dev-mode reload` kills the session and recreates it fresh.
 

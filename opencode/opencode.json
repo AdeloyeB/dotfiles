@@ -4,26 +4,26 @@
   "enabled_providers": [
     "opencode"
   ],
-  "model": "opencode/minimax-m2.5",
-  "small_model": "opencode/minimax-m2.5-free",
+  "model": "opencode/glm-5",
+  "small_model": "opencode/minimax-m2.5",
   "agent": {
     "build": {
-      "model": "opencode/kimi-k2.5"
+      "model": "opencode/glm-5"
     },
     "plan": {
       "model": "opencode/kimi-k2.5"
     },
     "general": {
-      "model": "opencode/glm-4.7"
+      "model": "opencode/glm-5"
     },
     "explore": {
-      "model": "opencode/minimax-m2.5-free"
+      "model": "opencode/minimax-m2.5"
     },
     "oracle": {
       "model": "opencode/kimi-k2.5"
     },
     "librarian": {
-      "model": "opencode/minimax-m2.5-free"
+      "model": "opencode/minimax-m2.5"
     },
     "multimodal-looker": {
       "model": "opencode/gemini-3-flash"
@@ -32,11 +32,11 @@
       "model": "opencode/kimi-k2.5"
     },
     "Momus (Plan Critic)": {
-      "model": "opencode/glm-4.7"
+      "model": "opencode/glm-5"
     }
   },
   "plugin": [
-    "oh-my-opencode",
+    "oh-my-opencode-slim",
     "opencode-wakatime"
   ],
   "skills": {
