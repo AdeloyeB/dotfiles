@@ -1,6 +1,6 @@
 # Dotfiles
 
-A dotfiles repository for a macOS development environment. Every tool shares a unified **Vesper** color theme — a warm, minimal dark palette built around a `#101010` background, sky blue accent `#7DC4E4`, and muted greys. Tmux acts as the session-management layer; Neovim (via LazyVim) provides the editor; Ghostty is the terminal emulator; Zsh is the shell.
+A dotfiles repository for a macOS development environment. Every tool shares a unified **NordStone** color theme — a cool, minimal dark palette built around a `#171717` background, cyan accent `#88c0d0`, and Nord-inspired blues. Tmux acts as the session-management layer; Neovim (ruicsh/nvim-config) provides the editor; Ghostty is the terminal emulator; Zsh is the shell.
 
 This document covers every configuration file, keybinding, plugin, color value, and script in the repository. It is detailed enough to recreate the entire setup from scratch.
 
@@ -29,7 +29,9 @@ dotfiles/
 ├── README.md
 ├── prompt.md
 ├── install.sh
-├── ghostty/config
+├── ghostty/
+│   ├── config
+│   └── themes/NordStone
 ├── tmux/tmux.conf
 ├── tmux/scripts/
 │   ├── dev-mode
@@ -42,7 +44,8 @@ dotfiles/
 ├── opencode/
 │   ├── opencode.json                # Open Code main config
 │   ├── tui.json                     # TUI config (theme, keybindings)
-│   └── oh-my-opencode.json          # oh-my-opencode plugin config
+│   ├── oh-my-opencode.json          # oh-my-opencode plugin config
+│   └── themes/nordstone.json        # NordStone theme for OpenCode
 ├── nvim/                        # Full LazyVim configuration
 │   ├── init.lua
 │   ├── stylua.toml
@@ -76,7 +79,7 @@ dotfiles/
 
 | Principle | Detail |
 |---|---|
-| **Unified color theme** | Vesper is applied consistently across Ghostty (built-in theme), tmux (custom status bar), Neovim (vesper.nvim), and lualine. |
+| **Unified color theme** | NordStone is applied consistently across Ghostty (custom theme), tmux (custom status bar), Neovim (nordstone.lua), FZF, and OpenCode. |
 | **Key palette** | Dark background `#101010`, sky blue accent `#7DC4E4`, mint `#99FFE4`, muted text `#A0A0A0`, dim `#5C5C5C`, border `#282828`. |
 | **Minimal aesthetic** | No unnecessary chrome, decorations, or visual noise. |
 | **Keyboard-driven** | Every action is reachable via a keybinding. Mouse support is enabled but not required. |
@@ -120,7 +123,7 @@ dotfiles/
 | Bun | JavaScript runtime and package manager |
 | oh-my-zsh | Zsh framework |
 | TPM | Tmux Plugin Manager (`~/.tmux/plugins/tpm`) |
-| Hack Nerd Font Mono | Terminal font (install via `brew install --cask font-hack-nerd-font`) |
+| JetBrainsMonoNL Nerd Font Mono | Terminal font (bundled in `nvim/.assets/`, install to `~/Library/Fonts/`) |
 
 ### Custom oh-my-zsh Plugins
 
@@ -181,13 +184,13 @@ After running the script, it prints remaining manual steps (font installation, T
 
 **File:** `ghostty/config`
 
-### Color Theme (Vesper)
+### Color Theme (NordStone)
 
-Uses Ghostty's built-in `Vesper` theme (`theme = Vesper`). All colors are provided by the theme — no manual palette overrides needed.
+Uses a custom `NordStone` theme (`ghostty/themes/NordStone`). Nord palette with neutral dark backgrounds (`#171717`), cyan accent (`#88c0d0`).
 
 ### Font
 
-- **Family:** Hack Nerd Font Mono
+- **Family:** JetBrainsMonoNL Nerd Font Mono
 - **Size:** 14pt
 
 ### Window
@@ -288,9 +291,9 @@ These escape sequences are captured in `tmux.conf` and mapped to the correspondi
 | `f` | Yes | Fuzzy pane search via fzf |
 | `Z` | Yes | Zoxide directory picker with eza tree preview |
 
-### Theme (Vesper)
+### Theme (NordStone)
 
-The tmux status bar is styled to match the Vesper palette used in Ghostty and Neovim.
+The tmux status bar is styled to match the NordStone palette used in Ghostty and Neovim.
 
 #### Status Bar
 
@@ -787,10 +790,10 @@ zsh-completions, zsh-history-substring-search
 | `Ctrl+M` | Accept line |
 | `Ctrl+X Ctrl+V` | Paste image path |
 
-#### FZF Theme (Vesper)
+#### FZF Theme (NordStone)
 
 ```
---color=bg:#101010,bg+:#232323,fg:#A0A0A0,fg+:#FFFFFF,hl:#FFC799,hl+:#FFC799,pointer:#FFC799,prompt:#FFC799,info:#5C5C5C
+--color=bg:#171717,bg+:#2e3440,fg:#d8dee9,fg+:#eceff4,hl:#88c0d0,hl+:#88c0d0,pointer:#88c0d0,prompt:#88c0d0,info:#4c566a
 ```
 
 #### Functions
@@ -912,7 +915,7 @@ This file controls all visual and interaction settings for the terminal UI.
 ```json
 {
   "$schema": "https://opencode.ai/tui.json",
-  "theme": "vesper",
+  "theme": "nordstone",
   "keybinds": {
     "session_interrupt": "ctrl+c",
     "input_clear": "ctrl+u",
@@ -991,8 +994,8 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 brew install neovim tmux fzf ripgrep fd lazygit node python \
              pngpaste zoxide eza imagemagick opencode
 
-# Font
-brew install --cask font-hack-nerd-font
+# Font (bundled in nvim/.assets/)
+cp nvim/.assets/JetBrainsMonoNLNerdFontMono-SemiBold.ttf ~/Library/Fonts/
 
 # Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh

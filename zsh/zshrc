@@ -139,8 +139,8 @@ bindkey '^]' autosuggest-accept-word            # ctrl+] to accept one word at a
 # fzf — fuzzy history (ctrl+r) and file picker (ctrl+t)
 source <(fzf --zsh)
 
-# fzf — Vesper color palette
-export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --border --color=bg:#101010,bg+:#232323,fg:#A0A0A0,fg+:#FFFFFF,hl:#FFC799,hl+:#FFC799,pointer:#FFC799,prompt:#FFC799,info:#5C5C5C"
+# fzf — NordStone color palette
+export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --border --color=bg:#171717,bg+:#2e3440,fg:#d8dee9,fg+:#eceff4,hl:#88c0d0,hl+:#88c0d0,pointer:#88c0d0,prompt:#88c0d0,info:#4c566a"
 
 # Fix Enter key in tmux+Ghostty (kitty protocol sends extended sequence)
 bindkey '^M' accept-line

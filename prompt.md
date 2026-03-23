@@ -93,7 +93,11 @@ npm install -g neovim
 
 ### 1.9 Font
 
-Download and install **Hack Nerd Font Mono** from <https://www.nerdfonts.com/>. Install all variants (Regular, Bold, Italic, Bold Italic) into the system font directory or `~/Library/Fonts/`.
+Install **JetBrainsMonoNL Nerd Font Mono** (bundled in `nvim/.assets/`):
+
+```bash
+cp nvim/.assets/JetBrainsMonoNLNerdFontMono-SemiBold.ttf ~/Library/Fonts/
+```
 
 ### 1.10 Java (Optional, for PATH)
 
@@ -110,11 +114,11 @@ This installs to `/opt/homebrew/opt/openjdk@21`.
 Create the file at `~/Library/Application Support/com.mitchellh.ghostty/config` with the following exact contents:
 
 ```
-# Ghostty Configuration - Vesper Theme (nexxeln/dots)
-# ===================================================
+# Ghostty Configuration - NordStone Theme
+# =========================================
 
-theme = Vesper
-font-family = Hack Nerd Font Mono
+theme = NordStone
+font-family = JetBrainsMonoNL Nerd Font Mono
 font-size = 14
 window-padding-x = 8
 window-padding-y = 8
@@ -135,7 +139,7 @@ keybind = super+d=text:\x1b[77;0u
 keybind = super+shift+d=text:\x1b[77;1u
 ```
 
-**Important:** The `theme = Vesper` line uses Ghostty's built-in Vesper theme. All ANSI colors, background, foreground, cursor, and selection colors are provided by the theme — no manual palette overrides needed.
+**Important:** The `theme = NordStone` line uses a custom Ghostty theme file at `ghostty/themes/NordStone`. This provides the Nord palette with neutral dark backgrounds (`#171717`) matching the Neovim NordStone colorscheme.
 
 ---
 
@@ -161,7 +165,7 @@ Copy the exact contents of `zsh/zshrc` from this repository. Key sections:
 - **oh-my-zsh** with `robbyrussell` theme and 18 plugins (git, docker, fzf, command-not-found, colored-man-pages, z, copypath, aliases, web-search, npm, bun, tmux, ssh-agent, sudo, zsh-syntax-highlighting, zsh-autosuggestions, zsh-completions, zsh-history-substring-search)
 - **Environment:** `BUN_INSTALL`, `JAVA_HOME`, PATH additions for windsurf, bun, local bin, java
 - **Autosuggestions:** ghost text `#666666`, strategy `(history completion)`, buffer max 20
-- **FZF Vesper colors:** `--color=bg:#101010,bg+:#232323,fg:#A0A0A0,fg+:#FFFFFF,hl:#FFC799,hl+:#FFC799,pointer:#FFC799,prompt:#FFC799,info:#5C5C5C`
+- **FZF NordStone colors:** `--color=bg:#171717,bg+:#2e3440,fg:#d8dee9,fg+:#eceff4,hl:#88c0d0,hl+:#88c0d0,pointer:#88c0d0,prompt:#88c0d0,info:#4c566a`
 - **dev-mode():** Shell function (not a script) that creates a tmux `sandbox` session with 4 windows:
   - Window 1 "claude": 3-pane layout (60/40 split, right split vertically), all panes run `claude --dangerously-skip-permissions`
   - Window 2 "opencode": single pane, auto-runs `opencode`
@@ -191,22 +195,22 @@ Copy the exact contents of `tmux/tmux.conf` from this repository. Key settings:
 - **Continuum:** auto-restore on, save interval 10m, resurrect nvim session strategy
 - **Terminal:** `tmux-256color`, RGB overrides for xterm-256color and xterm-ghostty, allow-passthrough on
 
-**Vesper Theme:**
+**NordStone Theme:**
 
 | Element | Value |
 |---|---|
 | Status position | Top |
 | Status lines | 2 (content + empty spacer for visual padding) |
-| Status bg | `#101010` |
-| Status fg | `#A0A0A0` |
-| Status left | `#[fg=#FFC799,bold] #S #[fg=#5C5C5C]│ ` |
-| Status right | `#[fg=#A0A0A0]%-I:%M %p ` |
-| Current window | `#[fg=#FFFFFF,bold] #I #W ` |
-| Inactive window | `#[fg=#5C5C5C] #I #W ` |
-| Pane borders | Simple lines, `#282828` both active and inactive (no accent) |
-| Messages | White on `#232323` |
-| Copy mode | White on `#232323` |
-| Clock | `#FFC799` |
+| Status bg | `#171717` |
+| Status fg | `#d8dee9` |
+| Status left | `#[fg=#88c0d0,bold] #S #[fg=#4c566a]│ ` |
+| Status right | `#[fg=#d8dee9]%-I:%M %p ` |
+| Current window | `#[fg=#eceff4,bold] #I #W ` |
+| Inactive window | `#[fg=#4c566a] #I #W ` |
+| Pane borders | Simple lines, `#3b4252` both active and inactive |
+| Messages | White on `#2e3440` |
+| Copy mode | White on `#3b4252` |
+| Clock | `#88c0d0` |
 
 **Keybindings:**
 
@@ -1014,7 +1018,7 @@ Create this file with the following exact contents:
 ```json
 {
   "$schema": "https://opencode.ai/tui.json",
-  "theme": "vesper",
+  "theme": "nordstone",
   "keybinds": {
     "session_interrupt": "ctrl+c",
     "input_clear": "ctrl+u",
@@ -1079,25 +1083,30 @@ Create `~/.gitconfig` with the following template. Replace `{{NAME}}` and `{{EMA
 
 ---
 
-## 8. Unified Color Palette Reference (Vesper)
+## 8. Unified Color Palette Reference (NordStone)
 
-This is the single source of truth for the color theme used across Ghostty, tmux, Neovim, FZF, and lualine. The theme is **Vesper** by nexxeln.
+This is the single source of truth for the color theme used across Ghostty, tmux, Neovim, FZF, OpenCode, and statusline. The theme is **NordStone** — Nord palette with neutral dark backgrounds.
 
 | Name / Role            | Hex Code  | Where Used                                      |
 |------------------------|-----------|------------------------------------------------|
-| Background             | `#101010` | Ghostty (Vesper theme), tmux status bg, nvim bg, lualine bg, FZF bg, popup bg |
-| Background elevated    | `#1A1A1A` | lualine section b                               |
-| Background selected    | `#232323` | FZF bg+, tmux copy/message bg, lualine bg_selected |
-| Foreground / Text      | `#FFFFFF` | Ghostty fg, tmux current window, nvim text, lualine fg, FZF fg+ |
-| Muted text             | `#A0A0A0` | tmux status fg, floax text, lualine section c, FZF fg |
-| Dim text               | `#7E7E7E` | lualine dim                                      |
-| Comment / inactive     | `#5C5C5C` | tmux inactive windows, tmux separator, lualine inactive, FZF info |
-| Primary accent (peach) | `#FFC799` | tmux session name, tmux active border, tmux clock, lualine normal/command mode, lualine branch icon, FZF highlight/pointer/prompt |
-| Mint                   | `#99FFE4` | lualine insert mode, diff added                  |
-| Visual / lavender      | `#aca1cf` | lualine visual mode                              |
-| Error / red            | `#FF8080` | lualine replace mode, diff removed               |
-| Border                 | `#282828` | tmux pane borders, floax border, popup border    |
-| ANSI palette           | (various) | Provided by Ghostty's built-in Vesper theme      |
+| Background             | `#171717` | Ghostty bg, tmux status bg, nvim bg (transparent), FZF bg, OpenCode bg, popup bg |
+| Background elevated    | `#1a1a1a` | nvim backgroundPanel, cursor line               |
+| Background selected    | `#2e3440` | FZF bg+, tmux message bg, OpenCode backgroundElement |
+| Foreground / Text      | `#d8dee9` | Ghostty fg, tmux status fg, nvim text, FZF fg, OpenCode text |
+| Bright text            | `#eceff4` | tmux current window, FZF fg+                    |
+| Muted text             | `#616e88` | nvim comments, OpenCode textMuted               |
+| Dim text               | `#8c97ad` | nvim secondary text                              |
+| Comment / inactive     | `#4c566a` | tmux inactive windows, FZF info                  |
+| Primary accent (cyan)  | `#88c0d0` | tmux session name, tmux clock, FZF highlight/pointer/prompt, OpenCode accent |
+| Secondary (blue)       | `#81a1c1` | nvim keywords, OpenCode secondary                |
+| Green                  | `#a3be8c` | diff added, strings, OpenCode success            |
+| Yellow                 | `#ebcb8b` | warnings, constants, file changed                |
+| Red                    | `#bf616a` | errors, diff removed                             |
+| Purple                 | `#b48ead` | nvim numbers, OpenCode syntaxNumber              |
+| Teal                   | `#8fbcbb` | nvim special, markdown code                      |
+| Orange                 | `#d08770` | nvim operator pending mode                       |
+| Border                 | `#3b4252` | tmux pane borders, floax border, Ghostty selection bg |
+| ANSI palette           | (various) | Defined in Ghostty custom NordStone theme        |
 
 ---
 
@@ -1134,7 +1143,7 @@ Run these steps in order after all files are in place:
    :TSUpdate
    ```
 
-7. **Verify Hack Nerd Font Mono** is installed and selected in Ghostty (font-family setting in the Ghostty config).
+7. **Verify JetBrainsMonoNL Nerd Font Mono** is installed and selected in Ghostty (font-family setting in the Ghostty config).
 
 8. **Install Open Code plugin dependencies:**
    ```bash
