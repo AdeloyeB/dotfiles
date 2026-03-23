@@ -720,6 +720,7 @@ Uses `prettier` with `prettier-plugin-apex` (installed globally via npm). Config
 | **Colorschemes** | vesper.nvim, catppuccin, tokyonight.nvim |
 | **UI** | lualine.nvim, bufferline.nvim, noice.nvim, nui.nvim |
 | **Git** | gitsigns.nvim, diffview.nvim |
+| **File Explorer** | neo-tree.nvim (toggleable sidebar, `<leader>E`) |
 | **Search/Navigation** | grug-far.nvim, flash.nvim, todo-comments.nvim |
 | **Help** | which-key.nvim |
 | **Rust** | rustaceanvim, crates.nvim |

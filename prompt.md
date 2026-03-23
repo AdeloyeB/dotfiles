@@ -339,6 +339,7 @@ All Neovim config files live under `~/.config/nvim/`.
       editor.lua
       colorscheme.lua
       git.lua
+      neo-tree.lua
       salesforce.lua
       ui.lua
       image.lua
